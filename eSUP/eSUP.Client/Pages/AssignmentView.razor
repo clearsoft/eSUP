@@ -1,0 +1,35 @@
+﻿@page "/assign-planner/{plannerid}"
+@rendermode @(new InteractiveWebAssemblyRenderMode(false))
+
+@using MudBlazor
+
+<MudPopoverProvider/>
+<MudDataGrid Items=@vm.Assignment!.Users Dense>
+    <ToolBarContent>
+        <MudGrid>
+            <MudItem xs="11">
+                <MudText Typo="Typo.h4" Class="d-flex align-center mud-width-full">@vm.Assignment!.Title</MudText>
+            </MudItem>
+            <MudItem xs="1">
+                <MudButton Variant=Variant.Filled Class="d-flex justify-end" Color="Color.Success" OnClick="SaveAssignmentAsync">Save</MudButton>
+            </MudItem>
+        </MudGrid>
+    </ToolBarContent>
+    <Columns>
+        <TemplateColumn Title="">
+            <CellTemplate>
+                <MudCheckBox @bind-Value=@context.Item!.IsAssigned Class="align-center" />
+            </CellTemplate>
+        </TemplateColumn> 
+        <PropertyColumn Property="x => x.UserId" Title="ID" Hidden="true" />
+        <PropertyColumn Property="x => x.FirstName" Title="First Name" />
+        <PropertyColumn Property="x => x.LastName" Title="Last Name" />
+        <PropertyColumn Property="x => x.Role" Title="Role" />
+        <PropertyColumn Property="x => x.Email" Title="Email" />
+
+    </Columns>
+</MudDataGrid>
+
+
+
+

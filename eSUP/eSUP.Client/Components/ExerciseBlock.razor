@@ -1,0 +1,37 @@
+﻿@using eSUP.DTO
+
+<MudStack AlignItems=AlignItems.Center Row Style="height:25px;">
+    <MudChip T="string" Color="Color.Secondary" Label="true" Variant="Variant.Filled" Size="Size.Medium">@Exercise!.Title</MudChip>
+    <MudRadioGroup T="string" @ref="LevelSelector" ValueChanged="Changed" Class="object-center">
+        <MudRadio Value="@("-1")" Color="Color.Error">Approaching</MudRadio>
+        <MudRadio Value="@("0")" Color="Color.Warning">At Level</MudRadio>
+        <MudRadio Value="@("1")" Color="Color.Success">Above</MudRadio>
+    </MudRadioGroup>
+</MudStack>
+
+@code {
+    [Parameter]
+    public ExerciseDto? Exercise { get; set; }
+
+    [Parameter]
+    public EventCallback<string> OnLevelChange { get; set; }
+
+    MudRadioGroup<string>? LevelSelector { get; set; }
+
+    public async Task Changed()
+    {
+        Exercise!.LevelSelected = LevelSelector?.Value ?? "";
+        LevelChanged();
+        await OnLevelChange.InvokeAsync("Message from Child!");
+    }
+
+    public void LevelChanged()
+    {
+        foreach (var part in Exercise!.Questions.SelectMany(q => q.Parts))
+        {
+            part.IsEnabled = IsPartActive(part);
+        }
+    }
+    private bool IsPartActive(PartDto part) => part.IsLevelBelow && Exercise!.LevelSelected == "-1" || part.IsLevelAt && Exercise!.LevelSelected == "0" || part.IsLevelAbove && Exercise!.LevelSelected == "1";
+
+}

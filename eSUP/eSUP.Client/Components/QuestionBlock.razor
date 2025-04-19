@@ -1,0 +1,78 @@
+﻿@using MudBlazor
+@using eSUP.DTO
+
+<div class="letter-grid">
+    <MudChip T="string" Label="true" Color="Color.Primary" Style="min-width:70px;" Variant="Variant.Outlined" OnClick="@(() => HandleClick(Item))">@Item!.Title</MudChip>
+    @foreach (var part in Item!.Parts)
+    {
+        <MudChip T="string" Label="true" Color="Color.Success" Style="min-width:40px;" Variant="SelectVariant(part)" OnClick="@(() => HandleClickAsync(part))">@part.Title</MudChip>
+    }
+</div>
+
+<style>
+    .letter-grid {
+        display: flex;
+        flex-direction: row;
+    }
+</style>
+
+@code {
+    [Parameter]
+    public QuestionDto? Item { get; set; }
+    [Parameter]
+    public ExerciseDto? Parent { get; set; }
+    [Parameter]
+    public EventCallback<PartDto> OnPartChange { get; set; }
+
+
+    private void HandleClick(QuestionDto? q)
+    {
+        if (q is null)
+            return;
+
+        q.State = !q.State;
+        switch (Parent!.LevelSelected)
+        {
+            case "-1":
+                q.Parts.ForEach(part => part.IsLevelBelow = q.State);
+                break;
+            case "0":
+                q.Parts.ForEach(part => part.IsLevelAt = q.State);
+                break;
+            case "1":
+                q.Parts.ForEach(part => part.IsLevelAbove = q.State);
+                break;
+            default:
+                break;
+        }
+        q.Parts.ForEach(part => part.IsEnabled = IsPartActive(part));
+    }
+
+    private async Task HandleClickAsync(PartDto partClicked)
+    {
+        switch (Parent!.LevelSelected)
+        {
+            case "-1":
+                partClicked.IsLevelBelow = !partClicked.IsLevelBelow;
+                break;
+            case "0":
+                partClicked.IsLevelAt = !partClicked.IsLevelAt;
+                break;
+            case "1":
+                partClicked.IsLevelAbove = !partClicked.IsLevelAbove;
+                break;
+            default:
+                Item!.Parts.ForEach(part => part.IsEnabled = Item!.Parts.IndexOf(part) <= Item!.Parts.IndexOf(partClicked));
+                break;
+        }
+        partClicked.IsEnabled = IsPartActive(partClicked);
+        await OnPartChange.InvokeAsync(partClicked);
+
+    }
+
+    private Variant SelectVariant(PartDto part) => part.IsEnabled ? Variant.Filled : Variant.Text;
+    private Variant AsSelected(PartDto part) => IsPartActive(part) ? Variant.Filled : Variant.Text;
+
+    public bool IsPartActive(PartDto part) => part.IsLevelBelow && Parent!.LevelSelected == "-1" || part.IsLevelAt && Parent!.LevelSelected == "0" || part.IsLevelAbove && Parent!.LevelSelected == "1";
+
+}

@@ -1,0 +1,16 @@
+﻿@page "/auth"
+@rendermode @(new InteractiveWebAssemblyRenderMode(false))
+
+@using Microsoft.AspNetCore.Authorization
+@using System.Collections.ObjectModel
+@using eSUP.DTO
+
+@inject HttpClient _httpClient
+
+@attribute [Authorize]
+
+<PageTitle>Admin User Managament</PageTitle>
+
+<AuthorizeView>
+    Hello @context.User.Identity?.Name!
+</AuthorizeView>

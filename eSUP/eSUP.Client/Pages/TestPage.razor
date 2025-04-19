@@ -1,0 +1,16 @@
+﻿@page "/test"
+@inject IDialogService DialogService
+@rendermode InteractiveWebAssembly
+
+<MudDialogProvider/>
+<MudButton OnClick="OpenDialogAsync" Variant="Variant.Filled" Color="Color.Primary">
+    Open Simple Dialog
+</MudButton>
+
+@code {
+    private void OpenDialogAsync()
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true };
+        DialogService.ShowAsync<TestDialog>("Simple Dialog", options);
+    }
+}

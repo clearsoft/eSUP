@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>4660fe8c-5f10-4218-a0cf-29fecfa5fbc5</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>eSUP.DTO</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)PartChangeDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommonDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ExerciseDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PartDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AssignmentDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PlannerDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PlannerSpecificationDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)QuestionDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UserAssignmentUpdateDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UserInformationDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UserSelectionDto.cs" />
+  </ItemGroup>
+</Project>

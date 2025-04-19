@@ -1,0 +1,17 @@
+﻿@using MudBlazor
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">Delete Planner</MudText>
+    </TitleContent>
+    <DialogActions>
+        <MudButton OnClick="OK" Color="Color.Error">Yes</MudButton>
+        <MudButton OnClick="Cancel" Color="Color.Success">No</MudButton>
+    </DialogActions>
+    <DialogContent>
+        <MudText Typo="Typo.body1">Are you sure you want to delete this planner?</MudText>
+        <MudText Typo="Typo.body2" Style="color:red;">This action cannot be undone.</MudText>
+    </DialogContent>
+
+</MudDialog>
+

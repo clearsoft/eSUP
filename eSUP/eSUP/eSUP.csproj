@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>aspnet-eSUP-20da8204-8241-4dea-8b0b-4353db3ffd72</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Data\MigrationsX\**" />
+    <Content Remove="Data\MigrationsX\**" />
+    <EmbeddedResource Remove="Data\MigrationsX\**" />
+    <None Remove="Data\MigrationsX\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Components\Pages\UserManagement.razor.cs" />
+    <Compile Remove="ViewModels\UserManagementViewModel.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Components\Pages\UserManagement.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Components\Pages\UserManagement.razor.old" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\eSUP.Client\eSUP.Client.csproj" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="9.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="9.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="MudBlazor" Version="8.5.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ViewModels\" />
+  </ItemGroup>
+
+</Project>

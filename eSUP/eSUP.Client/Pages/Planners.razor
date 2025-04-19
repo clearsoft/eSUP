@@ -1,0 +1,32 @@
+﻿@page "/planners"
+@rendermode @(new InteractiveWebAssemblyRenderMode(false))
+
+@using MudBlazor
+
+<MudDialogProvider />
+<MudPopoverProvider />
+<MudPaper Class="p-4">
+    <MudDataGrid Items="vm.AvailablePlanners" Bordered="true" Dense Hover>
+        <Columns>
+            <PropertyColumn Property="x => x.Id" Title="ID" Hidden="true" />
+            <PropertyColumn Property="x => x.Title" Title="Title" />
+            <TemplateColumn CellStyle="width:100px;">
+                <CellTemplate>
+                    <MudStack Row Style="height:25px;">
+                        @if (canManagePlanners)
+                        {
+                            <MudButton Color=Color.Tertiary Variant=Variant.Filled Size=Size.Small OnClick="() => AssignPlanner(context.Item)">Assign</MudButton>
+                            <MudButton Color=Color.Primary Variant=Variant.Filled Size=Size.Small OnClick="() => EditPlanner(context.Item)">Edit</MudButton>
+                            <MudButton Color=Color.Secondary Variant=Variant.Filled Size=Size.Small OnClick="() => DeletePlanner(context.Item)">Delete</MudButton>
+                        }
+                        else
+                        {
+                            <MudButton Color=Color.Tertiary Variant=Variant.Filled Size=Size.Small OnClick="() => OpenPlanner(context.Item)">Open</MudButton>
+                        }
+                    </MudStack>
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+    </MudDataGrid>
+</MudPaper>
+<MudButton Variant=Variant.Filled Color="Color.Primary" OnClick="GoToCreate">Create New Planner</MudButton>

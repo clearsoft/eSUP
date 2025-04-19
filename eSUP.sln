@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35913.81
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eSUP", "eSUP\eSUP\eSUP.csproj", "{816F24B0-CF5D-4D7A-9CC5-8650E7A25D1F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eSUP.Client", "eSUP\eSUP.Client\eSUP.Client.csproj", "{FE594551-49EB-4E21-A25C-25C14EC3241D}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "eSUP.DTO", "eSUP.DTO\eSUP.DTO.shproj", "{4660FE8C-5F10-4218-A0CF-29FECFA5FBC5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{816F24B0-CF5D-4D7A-9CC5-8650E7A25D1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{816F24B0-CF5D-4D7A-9CC5-8650E7A25D1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{816F24B0-CF5D-4D7A-9CC5-8650E7A25D1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{816F24B0-CF5D-4D7A-9CC5-8650E7A25D1F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE594551-49EB-4E21-A25C-25C14EC3241D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE594551-49EB-4E21-A25C-25C14EC3241D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE594551-49EB-4E21-A25C-25C14EC3241D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE594551-49EB-4E21-A25C-25C14EC3241D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6C1765E0-6A94-4055-B32E-838A537F9A3C}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		eSUP.DTO\eSUP.DTO.projitems*{4660fe8c-5f10-4218-a0cf-29fecfa5fbc5}*SharedItemsImports = 13
+		eSUP.DTO\eSUP.DTO.projitems*{fe594551-49eb-4e21-a25c-25c14ec3241d}*SharedItemsImports = 5
+	EndGlobalSection
+EndGlobal

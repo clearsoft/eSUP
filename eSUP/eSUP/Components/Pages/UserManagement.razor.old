@@ -1,0 +1,43 @@
+﻿@using MudBlazor
+@using System.Collections.ObjectModel
+@using eSUP.DTO
+
+<MudContainer>
+    <h3>Users</h3>
+    <MudDataGrid Items="@UserList" Bordered="true" Dense="true">
+        <Columns>
+            <PropertyColumn Property="x => x.Id" Title="ID" Hidden="true" />
+            <PropertyColumn Property="x => x.FullName" Title="Name" />
+            <PropertyColumn Property="x => x.Email" Title="eMail" />
+            <TemplateColumn Title="Confirmed">
+                <CellTemplate>
+                    @if (context.Item.EmailConfirmed)
+                    {
+                        <MudIcon Icon="@Icons.Material.Outlined.Check" Color="Color.Success" />
+                    }
+                </CellTemplate>
+            </TemplateColumn>
+            <TemplateColumn CellClass="d-flex justify-start" Title="Status">
+                <CellTemplate>
+                    @if (context.Item.Status == Enumerations.UserStatus.Pending)
+                    {
+                        <MudButton Size="@Size.Small" Style="height:24px;" Variant="@Variant.Filled" Color="@Color.Warning" OnClick="() => OpenReviewDialogAsync(context.Item)">Pending</MudButton>
+                    }
+                    else
+                    {
+                        <MudText Typo="Typo.button" Style="height:24px;" Size="Size.Medium" Label="true" Variant="@Variant.Filled" Color="@Color.Default">@context.Item.Status.ToString()</MudText>
+                    }
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+    </MudDataGrid>
+    <br />
+</MudContainer>
+
+@code {
+    bool isValid;
+    string ErrorMessage { get; set; }
+    public event Action<string, Severity>? ShowSnackbarMessage;
+    public ObservableCollection<UserInformationDto> UserList { get; set; } = new();
+
+}

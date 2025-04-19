@@ -1,0 +1,30 @@
+﻿@page "/users/management"
+@rendermode InteractiveAuto
+@using MudBlazor
+
+<MudPaper Class="p-4">
+    <MudText Typo="Typo.h5">User Management</MudText>
+    <MudDataGrid Items="vm.Users" Bordered="true" Dense Hover>
+        <Columns>
+            <PropertyColumn Property="x => x.UserId" Title="ID" Hidden="true" />
+            <PropertyColumn Property="x => x.FirstName" Title="First Name" />
+            <PropertyColumn Property="x => x.LastName" Title="Last Name" />
+            <PropertyColumn Property="x => x.Email" Title="eMail" />
+            <PropertyColumn Property="x => x.Role" Title="Role" />
+            <TemplateColumn>
+                <CellTemplate>
+                    <MudButton Size="@Size.Small" Variant="@Variant.Filled" Color="@Color.Primary" onclick="@(() => vm.UpgradeRoleAsync(context.Item))">Upgrade</MudButton>
+                </CellTemplate>
+            </TemplateColumn>
+            <TemplateColumn>
+                <CellTemplate>
+                    <MudSwitch @bind-Value="isOn" />
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+    </MudDataGrid>
+</MudPaper>
+
+@code{
+    bool isOn;
+}

@@ -1,0 +1,34 @@
+﻿@page "/create-planner"
+@rendermode @(new InteractiveWebAssemblyRenderMode(false))
+
+@using MudBlazor
+@using eSUP.Client.Components
+@using eSUP.Client.ViewModels
+@using eSUP.DTO
+
+@inject IDialogService dialogService
+@inject HttpClient httpClient
+
+<MudDialogProvider />
+<MudButton Variant=Variant.Filled Color="Color.Success" OnClick="SavePlanner">Save Planner</MudButton>
+
+<MudDataGrid Items=@vm.Planner!.Exercises Dense>
+    <Columns>
+        <HierarchyColumn T="ExerciseDto" IconSize="Size.Small" />
+        <TemplateColumn>
+            <CellTemplate>
+                <ExerciseBlock Exercise=@context.Item OnLevelChange="RefreshUI" />
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+    <ChildRowContent>
+        @foreach (var question in context.Item.Questions)
+        {
+            <QuestionBlock Item=@question Parent=@context.Item />
+        }
+    </ChildRowContent>
+</MudDataGrid>
+
+
+
+
