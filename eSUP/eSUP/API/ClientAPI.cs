@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Numerics;
+using System.Security.Claims;
 
 namespace eSUP.API;
 
@@ -22,9 +23,10 @@ public static class ClientAPI
             return Results.Ok(SUP);
         });
 
-        app.MapPost("/api/planner/save", async ([FromBody] PlannerDto dto, HttpContext context, MainContext dbContext) =>
+        app.MapPost("/api/planner/save", async (ClaimsPrincipal principal, [FromBody] PlannerDto dto, HttpContext context, MainContext dbContext) =>
         {
-            var planner = Utilities.CreateNewSUP(dto);
+            var user = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var planner = Utilities.SaveStudentProgress(dto);
             dbContext.Planners.Add(planner);
             await dbContext.SaveChangesAsync();
             return Results.Ok();

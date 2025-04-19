@@ -37,6 +37,7 @@ public partial class EditorView(CreatorViewModel _vm, NavigationManager _navigat
     private async Task UpdatePlanner()
     {
         await vm.UpdatePlannerAsync(changeStack);
-        navigationManager.NavigateTo("planners");
+        Task.Delay(200).Wait();
+        navigationManager.NavigateTo("/planners");
     }
 }

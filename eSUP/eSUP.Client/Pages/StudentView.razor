@@ -1,7 +1,38 @@
-﻿@page "/view"
-@rendermode InteractiveWebAssembly
-<h3>StudentView</h3>
+﻿@page "/open-planner/{plannerid}"
+@rendermode @(new InteractiveWebAssemblyRenderMode(false))
 
-@code {
+@using MudBlazor
+@using eSUP.Client.Components
+@using eSUP.DTO
 
-}
+<MudPopoverProvider/>
+<MudDataGrid Items=@vm.Planner!.Exercises Dense>
+    <ToolBarContent>
+        <MudGrid>
+            <MudItem xs="11">
+                <MudText Typo="Typo.h4" Class="d-flex align-center mud-width-full">@vm.Planner!.Title</MudText>
+            </MudItem>
+            <MudItem xs="1">
+                <MudButton Variant=Variant.Filled Class="d-flex justify-end" Color="Color.Success" OnClick="SaveAssignmentAsync">Save</MudButton>
+            </MudItem>
+        </MudGrid>
+    </ToolBarContent>
+    <Columns>
+        <HierarchyColumn T="ExerciseDto" IconSize="Size.Small" />
+        <TemplateColumn>
+            <CellTemplate>
+                <ExerciseBlock Exercise=@context.Item OnLevelChange="RefreshUI" />
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+    <ChildRowContent>
+        @foreach (var question in context.Item.Questions)
+        {
+            <QuestionBlock Item=@question Parent=@context.Item OnPartChange="RecordChange" />
+        }
+    </ChildRowContent>
+</MudDataGrid>
+
+
+
+

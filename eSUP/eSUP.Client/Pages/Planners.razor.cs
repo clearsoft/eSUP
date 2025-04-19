@@ -31,7 +31,7 @@ namespace eSUP.Client.Pages
 
         internal void OpenPlanner(PlannerDto planner)
         {
-
+            navigationManager.NavigateTo($"open-planner/{planner.Id}");
         }
 
         internal void AssignPlanner(PlannerDto planner)

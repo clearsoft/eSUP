@@ -21,7 +21,7 @@ public partial class AssignmentView(AssignmentViewModel _vm, NavigationManager _
     private async Task SaveAssignmentAsync()
     {
         await vm.SaveAssignmentAsync(PlannerId);
-        Task.Delay(500).Wait();
-        navigationManager.NavigateTo("planners");
+        Task.Delay(200).Wait();
+        navigationManager.NavigateTo("/planners");
     }
 }

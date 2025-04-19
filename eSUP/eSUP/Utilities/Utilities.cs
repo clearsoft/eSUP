@@ -80,4 +80,9 @@ public static class Utilities
         });
         return planner;
     }
+
+    internal static Planner SaveStudentProgress(PlannerDto dto)
+    {
+        return new Planner();
+    }
 }
