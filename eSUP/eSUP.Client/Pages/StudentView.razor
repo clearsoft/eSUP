@@ -13,7 +13,7 @@
                 <MudText Typo="Typo.h4" Class="d-flex align-center mud-width-full">@vm.Planner!.Title</MudText>
             </MudItem>
             <MudItem xs="1">
-                <MudButton Variant=Variant.Filled Class="d-flex justify-end" Color="Color.Success" OnClick="SaveAssignmentAsync">Save</MudButton>
+                <MudButton Variant=Variant.Filled Class="d-flex justify-end" Color="Color.Success" OnClick="SaveProgressAsync">Save</MudButton>
             </MudItem>
         </MudGrid>
     </ToolBarContent>
@@ -28,7 +28,7 @@
     <ChildRowContent>
         @foreach (var question in context.Item.Questions)
         {
-            <QuestionBlock Item=@question Parent=@context.Item OnPartChange="RecordChange" />
+            <StudentQuestionBlock Item=@question Parent=@context.Item OnPartChange="RecordChange" />
         }
     </ChildRowContent>
 </MudDataGrid>

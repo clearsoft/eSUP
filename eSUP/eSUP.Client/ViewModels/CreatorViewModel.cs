@@ -15,6 +15,7 @@ public class CreatorViewModel(HttpClient _httpClient)
     internal void CreateNewPlannerAsync(PlannerSpecificationDto dto)
     {
         Planner = Utilities.GenerateNewSUP(dto);
+        Planner.Exercises.ForEach(e => e.LevelSelected = "0");
     }
 
     public void LevelChanged(string? level)
@@ -34,13 +35,9 @@ public class CreatorViewModel(HttpClient _httpClient)
     internal async Task UpdatePlannerAsync(Stack<PartDto> changes)
     {
         var response = await httpClient.PostAsJsonAsync($"api/planner/update", changes);
-        if (response.IsSuccessStatusCode)
+        if (!response.IsSuccessStatusCode)
         {
-            var updatedPlanner = await response.Content.ReadFromJsonAsync<PlannerDto>();
-            if (updatedPlanner is not null)
-            {
-                Planner = updatedPlanner;
-            }
+            string? error = response.ReasonPhrase;
         }
     }
 
@@ -49,7 +46,7 @@ public class CreatorViewModel(HttpClient _httpClient)
         var planner = await httpClient.GetFromJsonAsync<PlannerDto>($"api/planner/{plannerId}");
         if (planner is not null)
         {
-                Planner = planner;
+            Planner = planner;
         }
     }
 }

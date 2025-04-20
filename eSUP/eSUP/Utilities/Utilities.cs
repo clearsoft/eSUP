@@ -85,4 +85,26 @@ public static class Utilities
     {
         return new Planner();
     }
+
+    internal static PlannerDto CompilePlannerDto(Planner planner, ApplicationUser user)
+    {
+        PlannerDto dto = new() { Id = planner.Id, Title = planner!.Title ?? "-", Exercises = [] };
+        planner.Exercises.OrderBy(q => q.Sequence).ToList().ForEach(e =>
+        {
+            ExerciseDto exerciseDto = new() { Id = e.Id, Title = e.Title ?? "-", Questions = [] };
+            e.Questions.OrderBy(q =>q.Sequence).ToList().ForEach(q =>
+            {
+                QuestionDto questionDto = new() { Id = q.Id, Title = q.Title ?? "-", Parts = [] };
+                q.Parts.OrderBy(q => q.Sequence).ToList().ForEach(p =>
+                {
+                    PartDto partDto = new() { Id = p.Id, Title = p.Title ?? "-", IsLevelAt = p.IsLevelAt, IsLevelAbove = p.IsLevelAbove, IsLevelBelow = p.IsLevelBelow  };
+                    partDto.IsCompleted = p.Users.Contains(user);
+                    questionDto.Parts.Add(partDto);
+                });
+                exerciseDto.Questions.Add(questionDto);
+            });
+            dto.Exercises.Add(exerciseDto);
+        });
+        return dto;
+    }
 }

@@ -1,0 +1,42 @@
+﻿@using MudBlazor
+@using eSUP.DTO
+
+<div class="letter-grid">
+    <MudChip T="string" Label="true" Color="Color.Primary" Style="min-width:70px;" Variant="Variant.Outlined">@Item!.Title</MudChip>
+    @foreach (var part in Item!.Parts)
+    {
+        @if (part.IsEnabled)
+        {
+            <MudChip T="string" Label="true" Color="SelectColour(part)" Style="min-width:40px;" OnClick="@(() => HandleClickAsync(part))">@part.Title</MudChip>
+        }
+        else
+        {
+            <MudChip T="string" Label="true" Style="min-width:40px;color:darkgray;" Variant="Variant.Outlined">@part.Title</MudChip>
+        }
+    }
+</div>
+
+<style>
+    .letter-grid {
+    display: flex;
+    flex-direction: row;
+    }
+</style>
+
+@code {
+    [Parameter]
+    public QuestionDto? Item { get; set; }
+    [Parameter]
+    public ExerciseDto? Parent { get; set; }
+    [Parameter]
+    public EventCallback<PartDto> OnPartChange { get; set; }
+
+    private async Task HandleClickAsync(PartDto partClicked)
+    {
+        partClicked.IsCompleted = !partClicked.IsCompleted;
+        await OnPartChange.InvokeAsync(partClicked);
+        StateHasChanged();
+    }
+
+    private Color SelectColour(PartDto part) => part.IsCompleted ? Color.Success : Color.Default;
+}

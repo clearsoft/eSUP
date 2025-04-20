@@ -7,15 +7,15 @@ public class StudentViewModel(HttpClient _httpClient)
 {
     private readonly HttpClient httpClient = _httpClient;
     public PlannerDto? Planner { get; set; } = new();
-    public async Task LoadAssignmentAsync(string? plannerId)
+    public async Task LoadProgressAsync(string? plannerId)
     {
         var response = await httpClient.GetFromJsonAsync<PlannerDto>($"api/planner/{plannerId}");
         Planner = response;
     }
 
-    internal async Task SaveAssignmentAsync(string? plannerId)
+    internal async Task SaveProgressAsync()
     {
-        var response = await httpClient.PostAsJsonAsync($"api/planner/save/{plannerId}", Planner);
+        var response = await httpClient.PostAsJsonAsync($"api/planner/save", Planner);
         bool isSuccessful = (response.IsSuccessStatusCode);
     }
 }

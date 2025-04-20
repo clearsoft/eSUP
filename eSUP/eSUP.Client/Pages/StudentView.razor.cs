@@ -8,14 +8,14 @@ public partial class StudentView(StudentViewModel _vm, NavigationManager _naviga
 {
     private readonly StudentViewModel vm = _vm;
     private NavigationManager navigationManager = _navigationManager;
-    private Stack<PartDto> changeStack = new();
+    private Queue<PartDto> changeStack = new();
 
     [Parameter]
     public string? PlannerId { get; set; }
 
     protected override async Task OnParametersSetAsync()
     {
-        await vm.LoadAssignmentAsync(PlannerId);
+        await vm.LoadProgressAsync(PlannerId);
         await base.OnParametersSetAsync();
     }
 
@@ -25,13 +25,13 @@ public partial class StudentView(StudentViewModel _vm, NavigationManager _naviga
     }
     private void RecordChange(PartDto part)
     {
-        changeStack.Push(part);
+        changeStack.Enqueue(part);
     }
 
-    private async Task SaveAssignmentAsync()
+    private async Task SaveProgressAsync()
     {
-        await vm.SaveAssignmentAsync(PlannerId);
-        Task.Delay(500).Wait();
+        await vm.SaveProgressAsync();
+        await Task.Delay(500);
         navigationManager.NavigateTo("planners");
     }
 }

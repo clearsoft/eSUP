@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
-using System.Numerics;
 using System.Security.Claims;
 
 namespace eSUP.API;
@@ -23,13 +22,84 @@ public static class ClientAPI
             return Results.Ok(SUP);
         });
 
-        app.MapPost("/api/planner/save", async (ClaimsPrincipal principal, [FromBody] PlannerDto dto, HttpContext context, MainContext dbContext) =>
+        app.MapGet("/api/planner/summary/{plannerId}", async (Guid plannerId, HttpContext context, MainContext dbContext) =>
         {
-            var user = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var planner = Utilities.SaveStudentProgress(dto);
-            dbContext.Planners.Add(planner);
-            await dbContext.SaveChangesAsync();
-            return Results.Ok();
+            var planner = await dbContext.Planners.Include(p => p.Exercises).ThenInclude(e => e.Questions).ThenInclude(q => q.Parts).ThenInclude(p => p.Users).FirstOrDefaultAsync(p => p.Id == plannerId);
+            if (planner is null)
+                return Results.BadRequest();
+
+            // We fill this with all that is needed for the table display
+            PlannerProgressDto progressPackage = new();
+            progressPackage.Title = planner.Title;
+
+            // Top heading = exercises
+            HeaderDto exerciseheader = new();
+            var exercises = planner.Exercises.OrderBy(e => e.Sequence).ToList();
+            exercises.ForEach(e =>
+            {
+                exerciseheader.Span = e.Questions.Count;
+
+                // This puts the exercise title in the first box and fills the rest with empty strings
+                exerciseheader.Headings.Add(e.Title! ?? "-");
+                for (int i = 0; i < exerciseheader.Span - 1; i++)
+                    exerciseheader.Headings.Add("");
+            });
+            progressPackage.HeadingItems.Add(exerciseheader);
+
+            // Second heading = questions
+            // TODO:  These can be combined
+            HeaderDto questionHeader = new();
+            exercises.ForEach(e =>
+            {
+                e.Questions.OrderBy(q => q.Sequence).ToList().ForEach(q => questionHeader.Headings.Add(q.Title! ?? "-"));
+            });
+            progressPackage.HeadingItems.Add(questionHeader);
+
+            var plannerWithUsers = await dbContext.Planners.Include(p => p.Users).FirstOrDefaultAsync(p => p.Id == plannerId);
+            List<StudentProgressDto> studentProgressList = [];
+            plannerWithUsers.Users.ForEach(user =>
+            {
+                StudentProgressDto output = new();
+                output.Name = user is null ? "-" : user.Email;
+                exercises.ForEach(e =>
+                {
+                    e.Questions.OrderBy(q => q.Sequence).ToList().ForEach(q =>
+                    {
+                        int count = q.Parts.Count(p => p.Users.Contains(user));
+                        output.PartsCompleteCount.Add(count);
+                    });
+                });
+                studentProgressList.Add(output);
+            });
+            progressPackage.StudentProgresses = studentProgressList;
+            return Results.Ok(progressPackage);
+        });
+
+        app.MapPost("/api/planner/save", async (ClaimsPrincipal principal, [FromBody] PlannerDto dto, MainContext dbContext) =>
+        {
+            try
+            {
+                var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
+                var user = await dbContext.Users.Include(u => u.Parts).FirstOrDefaultAsync(u => u.Id == userId);
+                if (user == null)
+                    return Results.NotFound("User not found");
+
+                var partIdList = dto.Exercises.SelectMany(e => e.Questions).SelectMany(q => q.Parts).Where(p => p.IsCompleted).Select(p => p.Id).ToList();
+
+                user.Parts.Clear();
+                await dbContext.SaveChangesAsync();
+
+                var selectedParts = await dbContext.Parts.Include(p => p.Users).Where(p => partIdList.Contains(p.Id)).ToListAsync();
+
+                user.Parts.AddRange(selectedParts);
+
+                await dbContext.SaveChangesAsync();
+                return Results.Ok();
+            }
+            catch (Exception ex)
+            {
+                return Results.InternalServerError(ex.Message);
+            }
         });
 
         app.MapPost("/api/planner/update", async ([FromBody] List<PartDto> changes, HttpContext context, MainContext dbContext) =>
@@ -48,13 +118,20 @@ public static class ClientAPI
             return Results.Ok();
         });
 
-        app.MapGet("/api/planner/{id}", async (string id, MainContext dbContext) =>
+        app.MapGet("/api/planner/{id}", async (ClaimsPrincipal principal, string id, MainContext dbContext) =>
         {
-            var planner = await dbContext.Planners.Include(p => p.Exercises).ThenInclude(e => e.Questions).ThenInclude(q => q.Parts).FirstOrDefaultAsync(p => p.Id == new Guid(id));
-            if (planner == null)
-                return Results.NotFound();
+            var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = await dbContext.Users.FindAsync(userId);
+            if (user == null)
+                return Results.NotFound("User not found");
 
-            return Results.Ok(planner.Map());
+            var planner = await dbContext.Planners.Include(p => p.Exercises).ThenInclude(e => e.Questions).ThenInclude(q => q.Parts).ThenInclude(p => p.Users).FirstOrDefaultAsync(p => p.Id == new Guid(id));
+            if (planner == null)
+                return Results.NotFound("Planner not found");
+
+            PlannerDto dto = Utilities.CompilePlannerDto(planner, user);
+
+            return Results.Ok(dto);
         });
 
         // This endpoint is used to get the full list of users marked with those for this specific planner
@@ -67,12 +144,12 @@ public static class ClientAPI
             List<UserInformationDto> userList = new();
             // Get all users and add role and assignment status
             await dbContext.Users.Include(u => u.Planners).ForEachAsync(u =>
-            {
-                UserInformationDto userDto = u.Map();
-                userDto.Role = userManager.GetRolesAsync(u).Result.FirstOrDefault();
-                userDto.IsAssigned = u.Planners.Contains(planner);
-                userList.Add(userDto);
-            });
+                    {
+                        UserInformationDto userDto = u.Map();
+                        userDto.Role = userManager.GetRolesAsync(u).Result.FirstOrDefault();
+                        userDto.IsAssigned = u.Planners.Contains(planner);
+                        userList.Add(userDto);
+                    });
 
             var assignmentDto = new AssignmentDto()
             {
@@ -84,7 +161,7 @@ public static class ClientAPI
         });
 
         // This endpoint is used to assign, reassign or deassign users to a planner
-        app.MapPost("/api/planner/assign/{id}", async (Guid id, AssignmentDto dto, MainContext dbContext) =>
+        app.MapPost("/api/planner/assign/{id}", async (ClaimsPrincipal principal, Guid id, AssignmentDto dto, MainContext dbContext) =>
         {
             try
             {
@@ -92,7 +169,13 @@ public static class ClientAPI
                 if (planner is null)
                     return Results.BadRequest("Planner not found");
 
+                var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
+                var user = await dbContext.Users.FindAsync(userId);
+                if (user == null)
+                    return Results.NotFound("User not found");
+
                 planner.Users.Clear();
+                user.Planners.Clear();
 
                 var selectedUserIds = dto.Users.Where(u => u.IsAssigned).Select(u => u.UserId.ToString()).ToList();
                 // Fetch actual user entities in one query
@@ -101,7 +184,7 @@ public static class ClientAPI
                     .ToListAsync();
 
                 // Add to planner
-                selectedUsers.ForEach(user => planner.Users.AddRange(selectedUsers));
+                planner.Users.AddRange(selectedUsers);
 
                 await dbContext.SaveChangesAsync();
                 return Results.Ok();

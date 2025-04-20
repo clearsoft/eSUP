@@ -16,13 +16,12 @@ public partial class MainLayout(AuthenticationStateProvider _auth)
             if (user.Identity?.IsAuthenticated == true)
             {
                 var userName = user.Identity.Name ?? string.Empty;
-                welcomeMessage = "Welcome, " + userName;
+                welcomeMessage = "Welcome " + userName;
             }
             else
             {
                 welcomeMessage = "Log in to begin";
             }
-
         }
         await base.OnInitializedAsync();
     }

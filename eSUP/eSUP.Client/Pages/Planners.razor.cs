@@ -39,6 +39,11 @@ namespace eSUP.Client.Pages
             navigationManager.NavigateTo($"assign-planner/{planner.Id}");
         }
 
+        internal void ShowProgress(PlannerDto planner)
+        {
+            navigationManager.NavigateTo($"planner-summary/{planner.Id}");
+        }
+
         internal void EditPlanner(PlannerDto planner)
         {
             navigationManager.NavigateTo($"edit-planner/{planner.Id}");

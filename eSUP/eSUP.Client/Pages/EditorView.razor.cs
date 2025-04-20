@@ -17,6 +17,7 @@ public partial class EditorView(CreatorViewModel _vm, NavigationManager _navigat
     {
         await vm.LoadPlannerAsync(PlannerId);
         await base.OnParametersSetAsync(); // Ensure base method is awaited
+        StateHasChanged();
     }
 
     protected override void OnParametersSet()
@@ -37,7 +38,8 @@ public partial class EditorView(CreatorViewModel _vm, NavigationManager _navigat
     private async Task UpdatePlanner()
     {
         await vm.UpdatePlannerAsync(changeStack);
-        Task.Delay(200).Wait();
-        navigationManager.NavigateTo("/planners");
+        await Task.Delay(500);
+        navigationManager.NavigateTo("planners");
     }
 }
+    

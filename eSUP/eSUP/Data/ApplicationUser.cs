@@ -10,6 +10,7 @@ namespace eSUP.Data
         public string? LastName { get; set; }
         public string? Group { get; set; }
         public List<Planner> Planners { get; set; } = [];
+        public List<Part> Parts { get; set; } = [];
     }
 
 }
