@@ -11,7 +11,7 @@ using eSUP.Data;
 namespace eSUP.Migrations
 {
     [DbContext(typeof(MainContext))]
-    [Migration("20250418234344_InitialMigration")]
+    [Migration("20250421061447_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -19,6 +19,21 @@ namespace eSUP.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.4");
+
+            modelBuilder.Entity("ApplicationUserPart", b =>
+                {
+                    b.Property<Guid>("PartsId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UsersId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("PartsId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("ApplicationUserPart");
+                });
 
             modelBuilder.Entity("ApplicationUserPlanner", b =>
                 {
@@ -374,6 +389,21 @@ namespace eSUP.Migrations
                     b.HasIndex("ExerciseId");
 
                     b.ToTable("Questions");
+                });
+
+            modelBuilder.Entity("ApplicationUserPart", b =>
+                {
+                    b.HasOne("eSUP.Data.Part", null)
+                        .WithMany()
+                        .HasForeignKey("PartsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("eSUP.Data.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ApplicationUserPlanner", b =>

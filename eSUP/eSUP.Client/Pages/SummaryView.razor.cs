@@ -12,7 +12,7 @@ public partial class SummaryView(SummaryViewModel _vm)
 
     protected override async Task OnInitializedAsync()
     {
-        await vm.LoadSummaryAsync(PlannerId);
+        await vm.LoadSummaryAsync(PlannerId!);
         await base.OnInitializedAsync();
     }
     // Dispose logic if needed

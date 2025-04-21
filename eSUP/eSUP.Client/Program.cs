@@ -29,6 +29,8 @@ internal class Program
         builder.Services.AddSingleton<PlannerViewModel>();
         builder.Services.AddSingleton<AssignmentViewModel>();
 
-        await builder.Build().RunAsync();
+        var app = builder.Build();
+
+        await app.RunAsync();
     }
 }

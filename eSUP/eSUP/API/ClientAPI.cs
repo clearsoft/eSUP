@@ -29,8 +29,10 @@ public static class ClientAPI
                 return Results.BadRequest();
 
             // We fill this with all that is needed for the table display
-            PlannerProgressDto progressPackage = new();
-            progressPackage.Title = planner.Title;
+            PlannerProgressDto progressPackage = new()
+            {
+                Title = planner.Title
+            };
 
             // Top heading = exercises
             HeaderDto exerciseheader = new();
@@ -57,15 +59,17 @@ public static class ClientAPI
 
             var plannerWithUsers = await dbContext.Planners.Include(p => p.Users).FirstOrDefaultAsync(p => p.Id == plannerId);
             List<StudentProgressDto> studentProgressList = [];
-            plannerWithUsers.Users.ForEach(user =>
+            plannerWithUsers!.Users.ForEach(user =>
             {
-                StudentProgressDto output = new();
-                output.Name = user is null ? "-" : user.Email;
+                StudentProgressDto output = new()
+                {
+                    Name = user is null ? "-" : user.Email
+                };
                 exercises.ForEach(e =>
                 {
                     e.Questions.OrderBy(q => q.Sequence).ToList().ForEach(q =>
                     {
-                        int count = q.Parts.Count(p => p.Users.Contains(user));
+                        int count = q.Parts.Count(p => p.Users.Contains(user!));
                         output.PartsCompleteCount.Add(count);
                     });
                 });
@@ -141,7 +145,7 @@ public static class ClientAPI
             if (planner is null)
                 return Results.BadRequest();
 
-            List<UserInformationDto> userList = new();
+            List<UserInformationDto> userList = [];
             // Get all users and add role and assignment status
             await dbContext.Users.Include(u => u.Planners).ForEachAsync(u =>
                     {
@@ -213,7 +217,7 @@ public static class ClientAPI
 
         app.MapGet("/api/users", async (MainContext dbContext, UserManager<ApplicationUser> userManager) =>
         {
-            List<UserInformationDto> userList = new();
+            List<UserInformationDto> userList = [];
             // Get all users and add role and assignment status
             await dbContext.Users.ForEachAsync(u =>
             {

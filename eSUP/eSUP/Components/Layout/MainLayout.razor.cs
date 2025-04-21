@@ -4,12 +4,12 @@ namespace eSUP.Components.Layout;
 
 public partial class MainLayout(AuthenticationStateProvider _auth)
 {
-    AuthenticationStateProvider auth => _auth;
+    private AuthenticationStateProvider Auth => _auth;
     private string welcomeMessage = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-        var authState = await auth.GetAuthenticationStateAsync();
+        var authState = await Auth.GetAuthenticationStateAsync();
         if (authState != null)
         {
             var user = authState.User;

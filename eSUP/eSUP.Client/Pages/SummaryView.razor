@@ -2,10 +2,10 @@
 @rendermode @(new InteractiveWebAssemblyRenderMode(false))
 @using eSUP.DTO
 
-<MudText Typo="Typo.h4">@vm.ProgressData.Title</MudText>
+<MudText Typo="Typo.h4">@vm!.ProgressData!.Title</MudText>
 <hr />
 <MudPaper Style="overflow-x: auto; max-width: 100%;">
-    <MudTable Items="@vm.ProgressData.HeadingItems" Dense="true" Elevation="0" Bordered="true" HorizontalScrollbar="true">
+    <MudTable Items="@vm!.ProgressData!.HeadingItems" Dense="true" Elevation="0" Bordered="true" HorizontalScrollbar="true">
         <RowTemplate>
             <MudCard Class="d-flex flex-row">
                 <MudTd Style="width:200px;">&nbsp;</MudTd>
