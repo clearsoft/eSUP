@@ -36,7 +36,13 @@ public class Program
             })
             .AddIdentityCookies();
 
-        var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+        //var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+        //builder.Services.AddDbContext<MainContext>(options => options.UseSqlite(connectionString));
+        builder.Services.AddDbContext<MainContext>(options => options.UseSqlite("Data Source = eSUP.db"));
+        // Local: ./Data/eSUP.db
+        // On Azure: D:/home/site/wwwroot/Data/eSUP.db
+        //string connectionString = "Data Source=D:/home/site/wwwroot/Data/eSUP.db";
+        string connectionString = "Data Source=eSUP.db";
         builder.Services.AddDbContext<MainContext>(options => options.UseSqlite(connectionString));
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -61,6 +67,12 @@ public class Program
             app.UseExceptionHandler("/Error");
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
+        }
+
+        using (var scope = app.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<MainContext>();
+            db.Database.Migrate();
         }
 
         app.UseHttpsRedirection();

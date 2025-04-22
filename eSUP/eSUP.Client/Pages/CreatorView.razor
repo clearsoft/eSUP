@@ -1,10 +1,13 @@
 ﻿@page "/create-planner"
 @rendermode @(new InteractiveWebAssemblyRenderMode(false))
 
+@using Microsoft.AspNetCore.Authorization
 @using MudBlazor
 @using eSUP.Client.Components
 @using eSUP.Client.ViewModels
 @using eSUP.DTO
+
+@attribute [Authorize(Roles = "Admin,Teacher")]
 
 @inject IDialogService dialogService
 

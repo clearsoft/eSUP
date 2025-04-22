@@ -29,7 +29,7 @@ public class CreatorViewModel(HttpClient _httpClient)
 
     internal async Task SavePlannerAsync()
     {
-        var response = await httpClient.PostAsJsonAsync("api/planner/save", Planner);
+        var response = await httpClient.PostAsJsonAsync("api/planner/new", Planner);
     }
 
     internal async Task UpdatePlannerAsync(Stack<PartDto> changes)

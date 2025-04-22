@@ -1,18 +1,22 @@
 ﻿@page "/planner-summary/{plannerid}"
 @rendermode @(new InteractiveWebAssemblyRenderMode(false))
+
+@using Microsoft.AspNetCore.Authorization
 @using eSUP.DTO
+
+@attribute [Authorize(Roles = "Admin,Teacher")]
 
 <MudText Typo="Typo.h4">@vm!.ProgressData!.Title</MudText>
 <hr />
 <MudPaper Style="overflow-x: auto; max-width: 100%;">
-    <MudTable Items="@vm!.ProgressData!.HeadingItems" Dense="true" Elevation="0" Bordered="true" HorizontalScrollbar="true">
+    <MudTable Items="@vm!.ProgressData!.HeadingItems" RowStyle="height:20px;" Dense="true" Elevation="0" Bordered="true" HorizontalScrollbar="true">
         <RowTemplate>
             <MudCard Class="d-flex flex-row">
                 <MudTd Style="width:200px;">&nbsp;</MudTd>
                 @foreach (var headingItem in context.Headings)
                 {
-                    <MudTd Class="pa-0">
-                        <MudChip Label="true" T="string" Style="height:24px;width:24px;padding:0;font-size:10px;display:flex;">@headingItem</MudChip>
+                    <MudTd Style="width:33px;" Class="pa-0">
+                        <p style="height:24px;padding:0;font-size:11px;display:flex;">@headingItem</p>
                     </MudTd>
                 }
             </MudCard>

@@ -12,17 +12,15 @@ public static class ClientAPI
 {
     public static void MapClientAPI(this WebApplication app)
     {
-        app.MapPost("/api/planner/new", ([FromBody] PlannerSpecificationDto specification, HttpContext context, MainContext dbContext) =>
+        app.MapPost("/api/planner/new", async ([FromBody] PlannerDto dto, HttpContext context, MainContext dbContext) =>
         {
-            if (specification == null)
-            {
-                return Results.BadRequest("Specification is null");
-            }
-            var SUP = Utilities.GenerateNewSUP(specification);
-            return Results.Ok(SUP);
+            var planner = Utilities.CreateNewSUP(dto);
+            dbContext.Planners.Add(planner);
+            await dbContext.SaveChangesAsync();
+            return Results.Ok();
         });
 
-        app.MapGet("/api/planner/summary/{plannerId}", async (Guid plannerId, HttpContext context, MainContext dbContext) =>
+        app.MapGet("/api/planner/summary/{plannerId}", async (Guid plannerId, MainContext dbContext) =>
         {
             var planner = await dbContext.Planners.Include(p => p.Exercises).ThenInclude(e => e.Questions).ThenInclude(q => q.Parts).ThenInclude(p => p.Users).FirstOrDefaultAsync(p => p.Id == plannerId);
             if (planner is null)
@@ -106,7 +104,7 @@ public static class ClientAPI
             }
         });
 
-        app.MapPost("/api/planner/update", async ([FromBody] List<PartDto> changes, HttpContext context, MainContext dbContext) =>
+        app.MapPost("/api/planner/update", async ([FromBody] List<PartDto> changes, MainContext dbContext) =>
         {
             changes.ForEach(change =>
             {

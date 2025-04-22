@@ -1,6 +1,10 @@
 ﻿@page "/users/management"
 @rendermode @(new InteractiveWebAssemblyRenderMode(false))
+
+@using Microsoft.AspNetCore.Authorization
 @using MudBlazor
+
+@attribute [Authorize(Roles = "Admin")]
 
 <MudPaper Class="p-4">
     <MudText Typo="Typo.h5">User Management</MudText>

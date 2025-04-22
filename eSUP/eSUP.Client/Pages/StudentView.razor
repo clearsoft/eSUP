@@ -1,9 +1,12 @@
 ﻿@page "/open-planner/{plannerid}"
 @rendermode @(new InteractiveWebAssemblyRenderMode(false))
 
+@using Microsoft.AspNetCore.Authorization
 @using MudBlazor
 @using eSUP.Client.Components
 @using eSUP.DTO
+
+@attribute [Authorize()]
 
 <MudPopoverProvider/>
 <MudDataGrid Items=@vm.Planner!.Exercises Dense>

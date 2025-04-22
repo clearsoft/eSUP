@@ -3,13 +3,28 @@ using Microsoft.EntityFrameworkCore;
 
 namespace eSUP.Data
 {
-    public class MainContext(DbContextOptions<MainContext> options) : IdentityDbContext<ApplicationUser>(options)
+    public class MainContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<Planner> Planners { get; set; }
         public DbSet<Exercise> Exercises { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<Part> Parts { get; set; }
 
+        // Constructors
+        public MainContext() : base()
+        {
+            Database.Migrate();
+        }
+
+        public MainContext(DbContextOptions<MainContext> options) : base(options)
+        {
+            //Database.Migrate();
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+        }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
