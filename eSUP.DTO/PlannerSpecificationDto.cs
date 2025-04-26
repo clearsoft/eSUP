@@ -2,7 +2,7 @@
 
     public class PlannerSpecificationDto
     {
-        public string Title = "Planner";
+        public string Title = "New Planner: " + DateTime.Now.ToString("dd MMM yyyy hh:mm");
         public int NumberOfExercises { get; set; } = 12;
         public int MaximumQuestionsPerExercise { get; set; } = 10;
         public int MaximumPartsPerQuestion { get; set; } = 10;

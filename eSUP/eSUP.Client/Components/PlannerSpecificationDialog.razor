@@ -32,8 +32,19 @@
                     <MudItem xs="4">
                         <MudTextField Variant="Variant.Outlined" Style="background: white;" Label="Part Title Template" HelperText="'%' for lower case letters" @bind-Value="dto.PartTitleTemplate" For="@(() => dto.PartTitleTemplate)" Required="true" />
                     </MudItem>
+                </MudGrid>
+            </MudContainer>
+            <p style="text-align:center;"><b>- or -</b></p>
+            <MudContainer>
+                <MudGrid>
                     <MudItem xs="12">
-                        <hr />
+                        <MudFileUpload T="IBrowserFile" Accept="txt" FilesChanged="UploadFilesAsync" Style="align-items:center;">
+                            <ActivatorContent>
+                                <MudFab Color="Color.Primary"
+                                        Label="Load Text File"
+                                        StartIcon="@Icons.Material.Filled.AttachFile" />
+                            </ActivatorContent>
+                        </MudFileUpload>
                     </MudItem>
                 </MudGrid>
             </MudContainer>

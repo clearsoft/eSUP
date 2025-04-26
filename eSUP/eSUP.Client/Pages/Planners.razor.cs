@@ -29,25 +29,15 @@ namespace eSUP.Client.Pages
             await base.OnParametersSetAsync();
         }
 
-        internal void OpenPlanner(PlannerDto planner)
-        {
-            navigationManager.NavigateTo($"open-planner/{planner.Id}");
-        }
+        internal void OpenPlanner(PlannerDto planner) => navigationManager.NavigateTo($"open-planner/{planner.Id}");
 
-        internal void AssignPlanner(PlannerDto planner)
-        {
-            navigationManager.NavigateTo($"assign-planner/{planner.Id}");
-        }
+        internal void AssignPlanner(PlannerDto planner) => navigationManager.NavigateTo($"assign-planner/{planner.Id}");
 
-        internal void ShowProgress(PlannerDto planner)
-        {
-            navigationManager.NavigateTo($"planner-summary/{planner.Id}");
-        }
+        internal void ShowProgress(PlannerDto planner) => navigationManager.NavigateTo($"planner-summary/{planner.Id}");
 
-        internal void EditPlanner(PlannerDto planner)
-        {
-            navigationManager.NavigateTo($"edit-planner/{planner.Id}");
-        }
+        internal void EditPlanner(PlannerDto planner) => navigationManager.NavigateTo($"edit-planner/{planner.Id}");
+
+        internal void GoToCreate()=> navigationManager.NavigateTo("/create-planner");
 
         public async void DeletePlanner(PlannerDto planner)
         {
@@ -62,11 +52,6 @@ namespace eSUP.Client.Pages
                 await vm.DeletePlannerAsync(planner.Id);
                 StateHasChanged();
             }
-        }
-
-        public void GoToCreate()
-        {
-            navigationManager.NavigateTo("/create-planner");
         }
     }
 }

@@ -20,7 +20,7 @@ namespace eSUP.Client.ViewModels
 
         internal async Task DeletePlannerAsync(Guid? id)
         {
-            var response = await httpClient.DeleteAsync($"api/planner/{id.ToString()}");
+            var response = await httpClient.DeleteAsync($"api/planner/{id}");
             if (response.IsSuccessStatusCode)
             {
                 var planner = AvailablePlanners?.FirstOrDefault(p => p.Id == id);

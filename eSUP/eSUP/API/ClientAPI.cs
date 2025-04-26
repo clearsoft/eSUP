@@ -120,6 +120,18 @@ public static class ClientAPI
             return Results.Ok();
         });
 
+        app.MapPost("api/planner/rename/{id}", async ([FromBody] string title, Guid id, MainContext dbContext) =>
+        {
+            var planner = await dbContext.Planners.FirstOrDefaultAsync(p => p.Id == id);
+            if (planner == null)
+                return Results.NotFound("Planner not found");
+
+            planner.Title = title;
+            await dbContext.SaveChangesAsync();
+
+            return Results.Ok();
+        });
+
         app.MapGet("/api/planner/{id}", async (ClaimsPrincipal principal, string id, MainContext dbContext) =>
         {
             var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -207,9 +219,20 @@ public static class ClientAPI
             return Results.Ok();
         });
 
-        app.MapGet("/api/planners", async (MainContext dbContext) =>
+        app.MapGet("/api/planners", async (ClaimsPrincipal principal, MainContext dbContext, UserManager<ApplicationUser> userManager) =>
         {
-            var planners = await dbContext.Planners.Select(p => p.Map()).ToListAsync();
+            var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = await dbContext.Users.FindAsync(userId);
+            if (user == null)
+                return Results.NotFound("User not found");
+
+            List<PlannerDto> planners;
+            var roles = userManager.GetRolesAsync(user).Result;
+            if (roles.Contains("Admin") || roles.Contains("Teacher"))
+                planners = await dbContext.Planners.Select(p => p.Map()).ToListAsync();
+            else
+                planners = await dbContext.Planners.Include(p => p.Users).Where(p => p.Users.Contains(user)).Select(p => p.Map()).ToListAsync();
+
             return Results.Ok(planners);
         });
 
@@ -235,12 +258,26 @@ public static class ClientAPI
             // Upgrade
             await userManager.AddToRoleAsync(user, "Teacher");
 
-            // Map into info ocject and add in role ... roles?
+            // Map into info object and add in role ... roles?
             UserInformationDto userInfo = user.Map();
             userInfo.Role = userManager.GetRolesAsync(user).Result.FirstOrDefault();
             return Results.Ok(userInfo);
         });
 
+        app.MapGet("/api/users/downgrade/{id}", async (Guid id, MainContext dbContext, UserManager<ApplicationUser> userManager) =>
+        {
+            var user = await userManager.FindByIdAsync(id.ToString());
+            if (user is null)
+                return Results.NotFound("User not found");
+
+            // Upgrade
+            await userManager.RemoveFromRoleAsync(user, "Teacher");
+
+            // Map into info object and add in role ... roles?
+            UserInformationDto userInfo = user.Map();
+            userInfo.Role = userManager.GetRolesAsync(user).Result.FirstOrDefault();
+            return Results.Ok(userInfo);
+        });
 
     }
 }

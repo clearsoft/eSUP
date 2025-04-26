@@ -1,16 +1,15 @@
-﻿using Microsoft.AspNetCore.Components;
-using eSUP.Client.Components;
+﻿using eSUP.Client.Components;
 using eSUP.Client.ViewModels;
 using eSUP.DTO;
+using Microsoft.AspNetCore.Components;
 using MudBlazor;
-using System.Net.Http;
 
 namespace eSUP.Client.Pages;
 
 public partial class CreatorView(CreatorViewModel _vm, NavigationManager _navigationManager)
 {
     private readonly CreatorViewModel vm = _vm;
-    private NavigationManager navigationManager = _navigationManager;
+    private readonly NavigationManager navigationManager = _navigationManager;
 
     protected override Task OnInitializedAsync()
     {
@@ -37,18 +36,24 @@ public partial class CreatorView(CreatorViewModel _vm, NavigationManager _naviga
         var result = await dialog.Result;
         if (result is not null && result.Data is not null && !result.Canceled)
         {
-            var plannerSpecification = result.Data as PlannerSpecificationDto;
-            if (plannerSpecification is not null)
-            {
-                vm.CreateNewPlannerAsync(plannerSpecification);
-                StateHasChanged();
-            }
+            vm.Planner = result.Data as PlannerDto;
+            vm.SelectedOption = "0";
+            StateHasChanged();
+        }
+        else
+        {
+            navigationManager.NavigateTo("planners");
         }
     }
 
     private async Task SavePlanner()
     {
         await vm.SavePlannerAsync();
+        navigationManager.NavigateTo("planners");
+    }
+
+    protected void ReturnToPlannerPage()
+    {
         navigationManager.NavigateTo("planners");
     }
 }

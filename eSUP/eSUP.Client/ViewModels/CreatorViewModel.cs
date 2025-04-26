@@ -1,5 +1,4 @@
 ﻿using eSUP.DTO;
-using System.Collections.ObjectModel;
 using System.Net.Http.Json;
 
 namespace eSUP.Client.ViewModels;
@@ -10,13 +9,8 @@ public class CreatorViewModel(HttpClient _httpClient)
     private string? selectedOption;
 
     public PlannerDto? Planner { get; set; } = new PlannerDto();
-
+    public bool IsTrimMode { get; set; } = false;
     public string? SelectedOption { get => selectedOption; set { selectedOption = value; LevelChanged(value); } }
-    internal void CreateNewPlannerAsync(PlannerSpecificationDto dto)
-    {
-        Planner = Utilities.GenerateNewSUP(dto);
-        Planner.Exercises.ForEach(e => e.LevelSelected = "0");
-    }
 
     public void LevelChanged(string? level)
     {
@@ -25,20 +19,21 @@ public class CreatorViewModel(HttpClient _httpClient)
             part.IsEnabled = IsPartActive(part, Convert.ToInt32(level));
         }
     }
-    private bool IsPartActive(PartDto part, int level) => part.IsLevelBelow && level == -1 || part.IsLevelAt && level == 0 || part.IsLevelAbove && level == 1;
+    private static bool IsPartActive(PartDto part, int level) => part.IsLevelBelow && level == -1 || part.IsLevelAt && level == 0 || part.IsLevelAbove && level == 1;
 
     internal async Task SavePlannerAsync()
     {
-        var response = await httpClient.PostAsJsonAsync("api/planner/new", Planner);
+        await httpClient.PostAsJsonAsync("api/planner/new", Planner);
     }
 
     internal async Task UpdatePlannerAsync(Stack<PartDto> changes)
     {
-        var response = await httpClient.PostAsJsonAsync($"api/planner/update", changes);
-        if (!response.IsSuccessStatusCode)
-        {
-            string? error = response.ReasonPhrase;
-        }
+        await httpClient.PostAsJsonAsync($"api/planner/update", changes);
+        await httpClient.PostAsJsonAsync($"api/planner/rename/{Planner!.Id}", Planner!.Title);
+        //if (!response.IsSuccessStatusCode)
+        //{
+        //    string? error = response.ReasonPhrase;
+        //}
     }
 
     internal async Task LoadPlannerAsync(string? plannerId)
@@ -47,6 +42,8 @@ public class CreatorViewModel(HttpClient _httpClient)
         if (planner is not null)
         {
             Planner = planner;
+            Planner.Exercises.ForEach(e => e.LevelSelected = "0");
+            SelectedOption = "0";
         }
     }
 }

@@ -22,6 +22,8 @@
     [Parameter]
     public ExerciseDto? Parent { get; set; }
     [Parameter]
+    public bool IsTrimMode { get; set; }
+    [Parameter]
     public EventCallback<PartDto> OnPartChange { get; set; }
 
 
@@ -55,23 +57,41 @@
 
     private async Task HandleClickAsync(PartDto partClicked)
     {
-        switch (Parent!.LevelSelected)
+        if (IsTrimMode)
         {
-            case "-1":
-                partClicked.IsLevelBelow = !partClicked.IsLevelBelow;
-                break;
-            case "0":
-                partClicked.IsLevelAt = !partClicked.IsLevelAt;
-                break;
-            case "1":
-                partClicked.IsLevelAbove = !partClicked.IsLevelAbove;
-                break;
-            default:
-                Item!.Parts.ForEach(part => part.IsEnabled = Item!.Parts.IndexOf(part) <= Item!.Parts.IndexOf(partClicked));
-                break;
+            try
+            {
+                int startIndex = Item!.Parts.IndexOf(partClicked);
+                int count = Item.Parts.Count - startIndex;
+                if (startIndex > 0)
+                    Item.Parts.RemoveRange(startIndex, count);
+                await OnPartChange.InvokeAsync(partClicked);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
-        partClicked.IsEnabled = IsPartActive(partClicked);
-        await OnPartChange.InvokeAsync(partClicked);
+        else
+        {
+            switch (Parent!.LevelSelected)
+            {
+                case "-1":
+                    partClicked.IsLevelBelow = !partClicked.IsLevelBelow;
+                    break;
+                case "0":
+                    partClicked.IsLevelAt = !partClicked.IsLevelAt;
+                    break;
+                case "1":
+                    partClicked.IsLevelAbove = !partClicked.IsLevelAbove;
+                    break;
+                default:
+                    Item!.Parts.ForEach(part => part.IsEnabled = Item!.Parts.IndexOf(part) <= Item!.Parts.IndexOf(partClicked));
+                    break;
+            }
+            partClicked.IsEnabled = IsPartActive(partClicked);
+            await OnPartChange.InvokeAsync(partClicked);
+        }
 
     }
 

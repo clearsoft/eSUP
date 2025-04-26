@@ -7,8 +7,8 @@ namespace eSUP.Client.Pages;
 public partial class StudentView(StudentViewModel _vm, NavigationManager _navigationManager)
 {
     private readonly StudentViewModel vm = _vm;
-    private NavigationManager navigationManager = _navigationManager;
-    private Queue<PartDto> changeStack = new();
+    private readonly NavigationManager navigationManager = _navigationManager;
+    private readonly Queue<PartDto> changeStack = new();
 
     [Parameter]
     public string? PlannerId { get; set; }
@@ -23,6 +23,7 @@ public partial class StudentView(StudentViewModel _vm, NavigationManager _naviga
     {
         StateHasChanged();
     }
+
     private void RecordChange(PartDto part)
     {
         changeStack.Enqueue(part);

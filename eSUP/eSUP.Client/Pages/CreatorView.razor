@@ -12,9 +12,24 @@
 @inject IDialogService dialogService
 
 <MudDialogProvider />
-<MudButton Variant=Variant.Filled Color="Color.Success" OnClick="SavePlanner">Save Planner</MudButton>
-
+<MudText Typo="Typo.h3">Create New Planner</MudText>
 <MudDataGrid Items=@vm.Planner!.Exercises Dense>
+    <ToolBarContent>
+        <MudGrid>
+            <MudItem xs="8">
+                <MudTextField HelperText="Enter the name of the planner here" Typo="Typo.h5" Class="d-flex align-left mud-width-full" @bind-Value=vm.Planner!.Title />
+            </MudItem>
+            <MudItem xs="2">
+                <MudSwitch Color=Color.Primary @bind-Value=vm.IsTrimMode>Trim mode</MudSwitch>
+            </MudItem>
+            <MudItem xs="1">
+                <MudButton Variant=Variant.Filled Color="Color.Secondary" OnClick="ReturnToPlannerPage">Cancel</MudButton>
+            </MudItem>
+            <MudItem xs="1">
+                <MudButton Variant=Variant.Filled Color="Color.Success" OnClick="SavePlanner">Save</MudButton>
+            </MudItem>
+        </MudGrid>
+    </ToolBarContent>
     <Columns>
         <HierarchyColumn T="ExerciseDto" IconSize="Size.Small" />
         <TemplateColumn>
@@ -26,7 +41,7 @@
     <ChildRowContent>
         @foreach (var question in context.Item.Questions)
         {
-            <QuestionBlock Item=@question Parent=@context.Item />
+            <QuestionBlock Item=@question Parent=@context.Item IsTrimMode=vm.IsTrimMode />
         }
     </ChildRowContent>
 </MudDataGrid>

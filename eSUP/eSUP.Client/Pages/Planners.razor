@@ -5,31 +5,52 @@
 
 <MudDialogProvider />
 <MudPopoverProvider />
-    <MudDataGrid Items="vm.AvailablePlanners" Bordered="true" Dense Hover>
+<MudText Typo="Typo.h3" Color="Color.Primary">Planners</MudText>
+<hr />
+@if (vm.AvailablePlanners is null || vm.AvailablePlanners.Count == 0)
+{
+    <MudText Color="Color.Error" Typo="Typo.h6">
+        There are no planners defined.  Click on the button below to create your first planner.
+    </MudText>
+}
+else
+{
+    <MudDataGrid Items="vm.AvailablePlanners" Bordered="false" Dense Hover>
         <Columns>
             <PropertyColumn Property="x => x.Id" Title="ID" Hidden="true" />
-            <PropertyColumn Property="x => x.Title" Title="Title" />
+            <PropertyColumn Property="x => x.Title" Title="" />
             <TemplateColumn CellStyle="width:100px;">
                 <CellTemplate>
-                    <MudStack Row Style="height:30px;">
+                    <MudStack Row AlignItems=AlignItems.Center Spacing=2>
                         @if (canManagePlanners)
                         {
-                            <MudButton Color=Color.Primary Variant=Variant.Filled Size=Size.Medium OnClick="() => EditPlanner(context.Item)">Edit</MudButton>
-                            <MudButton Color=Color.Secondary Variant=Variant.Filled Size=Size.Medium OnClick="() => DeletePlanner(context.Item)">Delete</MudButton>
-                            <MudButton Color=Color.Tertiary Variant=Variant.Filled Size=Size.Medium OnClick="() => AssignPlanner(context.Item)">Assign</MudButton>
-                            <MudButton Color=Color.Tertiary Variant=Variant.Filled Size=Size.Medium OnClick="() => ShowProgress(context.Item)">Progress</MudButton>
+                            <MudTooltip Text="Edit">
+                                <MudIconButton Icon="@Icons.Material.Filled.Edit" Color=Color.Primary Size=Size.Small aria-label="edit" OnClick="() => EditPlanner(context.Item)" />
+                            </MudTooltip>
+                            <MudTooltip Text="Delete">
+                                <MudIconButton Icon="@Icons.Material.Filled.Delete" Color=Color.Error Size=Size.Small aria-label="delete" OnClick="() => DeletePlanner(context.Item)" />
+                            </MudTooltip>
+                            <MudTooltip Text="Assign">
+                                <MudIconButton Icon="@Icons.Material.Filled.Addchart" Color=Color.Success Size=Size.Small aria-label="assign" OnClick="() => AssignPlanner(context.Item)" />
+                            </MudTooltip>
+                            <MudTooltip Text="Progress">
+                                <MudIconButton Icon="@Icons.Material.Filled.DirectionsRun" Color=Color.Dark Size=Size.Small aria-label="progress" OnClick="() => ShowProgress(context.Item)" />
+                            </MudTooltip>
                         }
                         else
                         {
-                            <MudButton Color=Color.Tertiary Variant=Variant.Filled Size=Size.Small OnClick="() => OpenPlanner(context.Item)">Open</MudButton>
+                            <MudTooltip Text="Progress">
+                                <MudIconButton Icon="@Icons.Material.Filled.FileOpen" Color=Color.Dark Size=Size.Small aria-label="open" OnClick="() => OpenPlanner(context.Item)" />
+                            </MudTooltip>
                         }
                     </MudStack>
                 </CellTemplate>
             </TemplateColumn>
         </Columns>
     </MudDataGrid>
+}
 @if (canManagePlanners)
 {
-    <hr/>
+    <hr />
     <MudButton Variant=Variant.Filled Color="Color.Primary" OnClick="GoToCreate">Create New Planner</MudButton>
 }

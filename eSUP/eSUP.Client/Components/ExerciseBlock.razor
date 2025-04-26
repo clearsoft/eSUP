@@ -1,11 +1,11 @@
 ﻿@using eSUP.DTO
 
 <MudStack AlignItems=AlignItems.Center Row Style="height:25px;">
-    <MudChip T="string" Color="Color.Secondary" Label="true" Variant="Variant.Filled" Size="Size.Medium">@Exercise!.Title</MudChip>
-    <MudRadioGroup T="string" @ref="LevelSelector" ValueChanged="Changed" Class="object-center">
-        <MudRadio Value="@("-1")" Color="Color.Error">Approaching</MudRadio>
-        <MudRadio Value="@("0")" Color="Color.Warning">At Level</MudRadio>
-        <MudRadio Value="@("1")" Color="Color.Success">Above</MudRadio>
+    <MudChip T="string" Color="Color.Primary" Style="width:100px;" Label="true" Variant="Variant.Filled" Size="Size.Medium">@Exercise!.Title</MudChip>
+    <MudRadioGroup T="string" @ref="LevelSelector" @bind-Value="LevelSelection" Class="object-center">
+        <MudRadio Value="@("-1")" Color="Color.Error" Dense="true">Approaching</MudRadio>
+        <MudRadio Value="@("0")" Color="Color.Warning" Dense="true">At Level</MudRadio>
+        <MudRadio Value="@("1")" Color="Color.Success" Dense="true">Above</MudRadio>
     </MudRadioGroup>
 </MudStack>
 
@@ -17,12 +17,22 @@
     public EventCallback<string> OnLevelChange { get; set; }
 
     MudRadioGroup<string>? LevelSelector { get; set; }
+    private string levelSelection = "0";
+    public string LevelSelection
+    {
+        get => levelSelection;
+        set
+        {
+            levelSelection = value;
+            Changed();
+        }
+    }
 
-    public async Task Changed()
+    public void Changed()
     {
         Exercise!.LevelSelected = LevelSelector?.Value ?? "";
         LevelChanged();
-        await OnLevelChange.InvokeAsync("Message from Child!");
+        OnLevelChange.InvokeAsync("Message from Child!");
     }
 
     public void LevelChanged()

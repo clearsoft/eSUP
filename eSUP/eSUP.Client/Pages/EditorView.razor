@@ -12,13 +12,21 @@
 @inject IDialogService dialogService
 
 <MudDialogProvider />
-<MudGrid>
-    <MudItem xs="11">
-        <InputText @bind-Value=@vm.Planner!.Title/>
-    </MudItem>
-    <MudButton Variant=Variant.Filled Color="Color.Success" OnClick="UpdatePlanner">Save Planner</MudButton>
-</MudGrid>
+<MudText Typo="Typo.h3" Color="Color.Primary">Edit Planner</MudText>
 <MudDataGrid Items=@vm.Planner!.Exercises Dense>
+    <ToolBarContent>
+        <MudGrid>
+            <MudItem xs="10">
+                <MudTextField Typo="Typo.h5" Class="d-flex align-left mud-width-full" @bind-Value=vm.Planner!.Title/>
+            </MudItem>
+            <MudItem xs="1">
+                <MudButton Variant=Variant.Filled Class="d-flex justify-end" Color="Color.Secondary" OnClick="ReturnToPlannerPage">Cancel</MudButton>
+            </MudItem>
+            <MudItem xs="1">
+                <MudButton Variant=Variant.Filled Class="d-flex justify-end" Color="Color.Success" OnClick="UpdatePlanner">Update</MudButton>
+            </MudItem>
+        </MudGrid>
+    </ToolBarContent>
     <Columns>
         <HierarchyColumn T="ExerciseDto" IconSize="Size.Small" />
         <TemplateColumn>

@@ -7,8 +7,8 @@ namespace eSUP.Client.Pages;
 public partial class EditorView(CreatorViewModel _vm, NavigationManager _navigationManager)
 {
     private readonly CreatorViewModel vm = _vm;
-    private NavigationManager navigationManager = _navigationManager;
-    private Stack<PartDto> changeStack = new();
+    private readonly NavigationManager navigationManager = _navigationManager;
+    private readonly Stack<PartDto> changeStack = new();
 
     [Parameter]
     public string? PlannerId { get; set; }
@@ -38,7 +38,12 @@ public partial class EditorView(CreatorViewModel _vm, NavigationManager _navigat
     private async Task UpdatePlanner()
     {
         await vm.UpdatePlannerAsync(changeStack);
-        await Task.Delay(500);
+        await Task.Delay(200);
+        navigationManager.NavigateTo("planners");
+    }
+
+    protected void ReturnToPlannerPage()
+    {
         navigationManager.NavigateTo("planners");
     }
 }

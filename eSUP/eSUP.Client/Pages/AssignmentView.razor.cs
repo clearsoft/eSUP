@@ -6,7 +6,7 @@ namespace eSUP.Client.Pages;
 public partial class AssignmentView(AssignmentViewModel _vm, NavigationManager _navigationManager)
 {
     private readonly AssignmentViewModel vm = _vm;
-    private NavigationManager navigationManager = _navigationManager;
+    private readonly NavigationManager navigationManager = _navigationManager;
 
     [Parameter]
     public string? PlannerId { get; set; }
@@ -23,5 +23,9 @@ public partial class AssignmentView(AssignmentViewModel _vm, NavigationManager _
         await vm.SaveAssignmentAsync(PlannerId);
         await Task.Delay(500);
         navigationManager.NavigateTo("/planners");
+    }
+    protected void ReturnToPlannerPage()
+    {
+        navigationManager.NavigateTo("planners");
     }
 }
