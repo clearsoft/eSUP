@@ -1,0 +1,26 @@
+﻿@using MudBlazor
+@using eSUP.DTO
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">Exercise details</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudText Typo="Typo.h6" Color="Color.Primary">@Title</MudText>
+        <MudTable Items=@Questions Dense>
+            <RowTemplate>
+                <MudTd>@context.Title</MudTd>
+                @foreach (var partDto in context.Parts)
+                {
+                    <MudChip T="string" Label="true" Color="GetColour(partDto.IsCompleted)" Variant="Variant.Filled">@partDto.Title</MudChip>
+                }
+            </RowTemplate>
+        </MudTable>
+    </DialogContent>
+    <DialogActions>
+        <MudButton ButtonType="ButtonType.Button" Variant="Variant.Outlined" Color="Color.Success" OnClick="OK">Close</MudButton>
+    </DialogActions>
+</MudDialog>
+@code{
+    Color GetColour(bool state) => state ? Color.Success : Color.Surface;
+}

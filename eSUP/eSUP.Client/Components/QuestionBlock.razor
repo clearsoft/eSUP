@@ -11,8 +11,8 @@
 
 <style>
     .letter-grid {
-        display: flex;
-        flex-direction: row;
+    display: flex;
+    flex-direction: row;
     }
 </style>
 
@@ -32,26 +32,46 @@
         if (q is null)
             return;
 
-        q.State = !q.State;
-        switch (Parent!.LevelSelected)
+        if (IsTrimMode)
         {
-            case "-1":
-                q.Parts.ForEach(part => part.IsLevelBelow = q.State);
-                break;
-            case "0":
-                q.Parts.ForEach(part => part.IsLevelAt = q.State);
-                break;
-            case "1":
-                q.Parts.ForEach(part => part.IsLevelAbove = q.State);
-                break;
-            default:
-                break;
+            try
+            {
+                int startIndex = Parent!.Questions.IndexOf(q);
+                int count = Parent.Questions.Count - startIndex;
+                if (startIndex > 0)
+                {
+                    Parent.Questions.RemoveRange(startIndex, count);
+                    await OnPartChange.InvokeAsync(q.Parts[0]); // HACK
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
-
-        foreach (var part in q.Parts)
+        else
         {
-            part.IsEnabled = IsPartActive(part);
-            await OnPartChange.InvokeAsync(part);
+            q.State = !q.State;
+            switch (Parent!.LevelSelected)
+            {
+                case "-1":
+                    q.Parts.ForEach(part => part.IsLevelBelow = q.State);
+                    break;
+                case "0":
+                    q.Parts.ForEach(part => part.IsLevelAt = q.State);
+                    break;
+                case "1":
+                    q.Parts.ForEach(part => part.IsLevelAbove = q.State);
+                    break;
+                default:
+                    break;
+            }
+
+            foreach (var part in q.Parts)
+            {
+                part.IsEnabled = IsPartActive(part);
+                await OnPartChange.InvokeAsync(part);
+            }
         }
     }
 

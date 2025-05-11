@@ -61,6 +61,29 @@ public static class Mappers
             Parts = question.Parts.OrderBy(p => p.Sequence).Select(p => p.Map()).ToList(),
         };
     }
+
+    public static QuestionDto Map(this Question question, ApplicationUser? user)
+    {
+        var parts = question.Parts.OrderBy(p => p.Sequence).Select(p => p.Map()).ToList();
+        foreach (var part in parts)
+        {
+            if (user != null)
+            {
+                part.IsLevelBelow = user.Parts.Any(p => p.Id == part.Id && p.IsLevelBelow);
+                part.IsLevelAt = user.Parts.Any(p => p.Id == part.Id && p.IsLevelAt);
+                part.IsLevelAbove = user.Parts.Any(p => p.Id == part.Id && p.IsLevelAbove);
+                part.IsCompleted = part.IsLevelBelow || part.IsLevelAt || part.IsLevelAbove;
+            }
+        }
+        return new QuestionDto
+        {
+            Id = question.Id,
+            Sequence = question.Sequence,
+            Title = question.Title ?? "-",
+            Parts = parts
+        };
+    }
+
     public static PartDto Map(this Part part)
     {
         return new PartDto

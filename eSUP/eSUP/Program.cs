@@ -36,6 +36,17 @@ public class Program
             })
             .AddIdentityCookies();
 
+        //string? googleClientId = builder.Configuration.GetValue<string>("Authentication:Google:ClientId");
+        //string? googleClientSecret = builder.Configuration.GetValue<string>("Authentication:Google:ClientSecret");
+        //builder.Services.AddAuthentication().AddGoogle(googleOptions =>
+        //{
+        //    googleOptions.ClientId =
+        //    builder.Configuration.GetValue<string>(googleClientId);
+
+        //    googleOptions.ClientSecret =
+        //    builder.Configuration.GetValue<string>(googleClientSecret);
+        //});
+
         //var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
         //builder.Services.AddDbContext<MainContext>(options => options.UseSqlite(connectionString));
         builder.Services.AddDbContext<MainContext>(options => options.UseSqlite("Data Source = eSUP.db"));

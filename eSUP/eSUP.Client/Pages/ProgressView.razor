@@ -1,0 +1,38 @@
+﻿@page "/planner-summary/{plannerid}"
+@rendermode @(new InteractiveWebAssemblyRenderMode(false))
+
+@using Microsoft.AspNetCore.Authorization
+@using eSUP.DTO
+
+@attribute [Authorize(Roles = "Admin,Teacher")]
+<MudPopoverProvider/>
+<MudDialogProvider/>
+<MudText Typo="Typo.h3" Color="Color.Primary">Progress</MudText>
+<hr />
+
+<MudText Typo="Typo.h5">@vm!.ProgressData!.Title</MudText>
+<br />
+<MudPaper Style="overflow-x: auto; max-width: 100%;">
+    <MudTable Items="@vm.ProgressData!.StudentProgresses" Dense="true" Elevation="0" Bordered="false" HorizontalScrollbar="true">
+        <HeaderContent>
+            <MudTh>Student Name</MudTh>
+            @foreach (var entry in vm.ProgressData!.StudentProgresses[0].Exercises)
+            {
+                <MudTh>@entry.Title</MudTh>
+            }
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd Style="width:300px;">@context.Name</MudTd>
+            @foreach (var exercise in context.Exercises)
+            {
+                string baseStyle = "width:20px;padding:3px;margin:3px;";
+                string style = baseStyle + ((exercise.PartCount > 0) ? "background:lightgreen;" : "background:whitesmoke;");
+                <MudTd Class="pa-0">
+                    <MudButton Variant="Variant.Outlined" OnClick="() => ExpandResult(exercise, context)" Style="@style">@exercise.PartCount</MudButton>
+                </MudTd>
+            }
+        </RowTemplate>
+    </MudTable>
+</MudPaper>
+<hr />
+<MudButton Color="Color.Secondary" Variant="Variant.Filled" OnClick="ReturnToPlannerPage">&lt; Back</MudButton>

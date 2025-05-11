@@ -1,0 +1,42 @@
+﻿.scroll-wrapper {
+    max-height: 500px;
+    overflow-y: auto;
+    overflow-x: auto;
+    border: 1px solid #ccc;
+}
+
+.sticky-header {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 2;
+}
+
+.sticky-col {
+    position: sticky;
+    left: 0;
+    background-color: white;
+    z-index: 3;
+    min-width: 200px;
+}
+
+.full-width-table {
+    width: max-content;
+}
+
+/* Green/Grey Box Styling */
+.status-box {
+    border-radius: 4px;
+    display: inline-block;
+    margin: 2px;
+    height: 24px;
+    width: 24px;
+}
+
+    .status-box.green {
+        background-color: var(--mud-palette-success);
+    }
+
+    .status-box.grey {
+        background-color: var(--mud-palette-grey-light);
+    }

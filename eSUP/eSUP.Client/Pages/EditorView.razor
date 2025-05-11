@@ -16,8 +16,11 @@
 <MudDataGrid Items=@vm.Planner!.Exercises Dense>
     <ToolBarContent>
         <MudGrid>
-            <MudItem xs="10">
+            <MudItem xs="8">
                 <MudTextField Typo="Typo.h5" Class="d-flex align-left mud-width-full" @bind-Value=vm.Planner!.Title/>
+            </MudItem>
+            <MudItem xs="2">
+                <MudSwitch Color=Color.Primary @bind-Value=vm.IsTrimMode>Trim mode</MudSwitch>
             </MudItem>
             <MudItem xs="1">
                 <MudButton Variant=Variant.Filled Class="d-flex justify-end" Color="Color.Secondary" OnClick="ReturnToPlannerPage">Cancel</MudButton>
@@ -38,7 +41,7 @@
     <ChildRowContent>
         @foreach (var question in context.Item.Questions)
         {
-            <QuestionBlock Item=@question Parent=@context.Item OnPartChange="RecordChange" />
+            <QuestionBlock Item=@question Parent=@context.Item OnPartChange="RecordChange" IsTrimMode=vm.IsTrimMode />
         }
     </ChildRowContent>
 </MudDataGrid>

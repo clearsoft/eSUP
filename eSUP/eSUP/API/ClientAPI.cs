@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using System.Numerics;
 using System.Security.Claims;
 
 namespace eSUP.API;
@@ -27,9 +28,52 @@ public static class ClientAPI
                 return Results.BadRequest();
 
             // We fill this with all that is needed for the table display
+            PlannerProgressDto progressPackage = new();
+            await dbContext.Users.Where(u => u.Parts.Any()).ForEachAsync(user =>
+            {
+                var studentExercise = new StudentProgressDto
+                {
+                    Id = new Guid(user.Id),
+                    Name = user.Email
+                };
+                planner.Exercises.OrderBy(e =>e.Sequence).ToList().ForEach(e =>
+                {
+                    var partCount = e.Questions.SelectMany(q => q.Parts).Where(p => p.Users.Contains(user)).Count();
+                    var exercise = new ExerciseDto()
+                    {
+                        Id = e.Id,
+                        Title = e.Title ?? "-",
+                        PartCount = partCount
+                    };
+                    studentExercise.Exercises.Add(exercise);
+                });
+                progressPackage.StudentProgresses.Add(studentExercise);
+            });
+
+            return Results.Ok(progressPackage);
+        });
+
+        app.MapGet("/api/planner/detail/{exerciseId}/{userId}", async (Guid exerciseId, Guid userId, MainContext dbContext) =>
+        {
+            var exercise = await dbContext.Exercises.Include(e => e.Questions).ThenInclude(q => q.Parts).ThenInclude(p => p.Users).FirstOrDefaultAsync(e => e.Id == exerciseId);
+            if (exercise is null)
+                return Results.BadRequest();
+            var user = await dbContext.Users.FindAsync(userId.ToString());
+            var questions = exercise.Questions.OrderBy(q => q.Sequence).Select(q => q.Map(user)).ToList();
+            return Results.Ok(questions);
+
+        });
+
+        app.MapGet("/api/planner/summary-full/{plannerId}", async (Guid plannerId, MainContext dbContext) =>
+        {
+            var planner = await dbContext.Planners.Include(p => p.Exercises).ThenInclude(e => e.Questions).ThenInclude(q => q.Parts).ThenInclude(p => p.Users).FirstOrDefaultAsync(p => p.Id == plannerId);
+            if (planner is null)
+                return Results.BadRequest();
+
+            // We fill this with all that is needed for the table display
             PlannerProgressDto progressPackage = new()
             {
-                Title = planner.Title
+                Title = planner.Title ?? "-"
             };
 
             // Top heading = exercises
@@ -104,10 +148,11 @@ public static class ClientAPI
             }
         });
 
-        app.MapPost("/api/planner/update", async ([FromBody] List<PartDto> changes, MainContext dbContext) =>
+        app.MapPost("/api/planner/update", async ([FromBody] Stack<PartDto> changes, MainContext dbContext) =>
         {
-            changes.ForEach(change =>
+            while(changes.Count >0)
             {
+                var change = changes.Pop();
                 var part = dbContext.Parts.Find(change.Id);
                 if (part != null)
                 {
@@ -115,7 +160,7 @@ public static class ClientAPI
                     part.IsLevelAbove = change.IsLevelAbove;
                     part.IsLevelBelow = change.IsLevelBelow;
                 }
-            });
+            }
             await dbContext.SaveChangesAsync();
             return Results.Ok();
         });

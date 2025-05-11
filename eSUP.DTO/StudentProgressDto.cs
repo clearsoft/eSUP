@@ -1,8 +1,11 @@
 ﻿namespace eSUP.DTO;
 
-public class StudentProgressDto
+public class StudentProgressDto : CommonDto
 {
     public string? Name { get; set; }
-    public List<bool> IsPartCompleteList { get; set; } = [];
     public List<int> PartsCompleteCount { get; set; } = [];
+    public List<ExerciseDto> Exercises { get; set; } = [];
 }
+
+
+

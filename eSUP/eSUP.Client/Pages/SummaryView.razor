@@ -1,44 +1,5 @@
-﻿@page "/planner-summary/{plannerid}"
-@rendermode @(new InteractiveWebAssemblyRenderMode(false))
-
-@using Microsoft.AspNetCore.Authorization
-@using eSUP.DTO
-
-@attribute [Authorize(Roles = "Admin,Teacher")]
-<MudText Typo="Typo.h3" Color="Color.Primary">Progress</MudText>
+﻿@page "/summary"
+<MudText Typo="Typo.h3" Color="Color.Primary">Summary</MudText>
 <hr />
 
-<MudText Typo="Typo.h5">@vm!.ProgressData!.Title</MudText>
-<br/>
-<MudPaper Style="overflow-x: auto; max-width: 100%;">
-    <MudTable Items="@vm!.ProgressData!.HeadingItems" RowStyle="height:10px;" Dense="true" Elevation="0" Bordered="true" HorizontalScrollbar="true">
-        <RowTemplate>
-            <MudCard Class="flex-row">
-                <MudTd Style="width:300px;background:whitesmoke;">&nbsp;</MudTd>
-                @foreach (var headingItem in context.Headings)
-                {
-                    <MudTd Style="width:33px;background:whitesmoke;text-align:center" Class="pa-0 pt-2">
-                        @headingItem
-                    </MudTd>
-                }
-            </MudCard>
-        </RowTemplate>
-    </MudTable>
-    <MudTable Items="@vm.ProgressData.StudentProgresses" Dense="true" Elevation="0" Bordered="true" HorizontalScrollbar="true">
-        <RowTemplate>
-            <MudCard Class="d-flex flex-row">
-                <MudTd Style="width:300px;">@context.Name</MudTd>
-                @foreach (var count in context.PartsCompleteCount)
-                {
-                    string baseStyle = "height:24px;width:24px;padding:0;font-size:10px;display:flex;";
-                    string style = baseStyle + ((count > 0) ? "background:lightgreen;" : "background:whitesmoke;");
-                    <MudTd Class="pa-0">
-                        <MudChip Label="true" T="string" Style="@style">@count</MudChip>
-                    </MudTd>
-                }
-            </MudCard>
-        </RowTemplate>
-    </MudTable>
-</MudPaper>
-<hr/>
-<MudButton Color="Color.Secondary" Variant="Variant.Filled" OnClick="ReturnToPlannerPage">&lt; Back</MudButton>
+<MudChip T="string" Size="Size.Large">Coming soon</MudChip>

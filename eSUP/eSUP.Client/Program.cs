@@ -24,7 +24,7 @@ internal class Program
 
         builder.Services.AddSingleton<CreatorViewModel>();
         builder.Services.AddSingleton<StudentViewModel>();
-        builder.Services.AddSingleton<SummaryViewModel>();
+        builder.Services.AddSingleton<ProgressViewModel>();
         builder.Services.AddSingleton<UserManagementViewModel>();
         builder.Services.AddSingleton<PlannerViewModel>();
         builder.Services.AddSingleton<AssignmentViewModel>();

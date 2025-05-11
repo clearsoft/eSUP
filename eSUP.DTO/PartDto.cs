@@ -2,9 +2,9 @@
 
 public class PartDto : CommonDto
 {
-    public bool IsEnabled { get; set; } = true;
-    public bool IsLevelBelow { get; set; } = false;
-    public bool IsLevelAt { get; set; } = false;
-    public bool IsLevelAbove { get; set; } = false;
-    public bool IsCompleted { get; set; } = false;
+    public bool IsEnabled { get; set; }
+    public bool IsLevelBelow { get; set; }
+    public bool IsLevelAt { get; set; }
+    public bool IsLevelAbove { get; set; }
+    public bool IsCompleted { get; set; }
 }

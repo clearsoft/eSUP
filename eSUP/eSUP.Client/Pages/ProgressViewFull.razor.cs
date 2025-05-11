@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Components;
 
 namespace eSUP.Client.Pages;
 
-public partial class SummaryView(SummaryViewModel _vm, NavigationManager _nav)
+public partial class ProgressViewFull(ProgressViewModelFull _vm, NavigationManager _nav)
 {
-    private readonly SummaryViewModel vm = _vm;
+    private readonly ProgressViewModelFull vm = _vm;
     private readonly NavigationManager navigationManager = _nav;
 
     [Parameter]
@@ -20,10 +20,5 @@ public partial class SummaryView(SummaryViewModel _vm, NavigationManager _nav)
     protected void ReturnToPlannerPage()
     {
         navigationManager.NavigateTo("planners");
-    }
-
-    // Dispose logic if needed
-    public void Dispose()
-    {
     }
 }

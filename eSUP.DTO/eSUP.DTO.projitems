@@ -9,6 +9,7 @@
     <Import_RootNamespace>eSUP.DTO</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)DetailRequestDto.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HeaderDto.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PartChangeDto.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommonDto.cs" />
