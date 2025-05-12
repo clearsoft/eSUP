@@ -293,7 +293,7 @@ public static class ClientAPI
             return Results.Ok(userList);
         });
 
-        app.MapPost("/api/users/upload", async (List<UserInformationDto> newUsers, MainContext dbContext, UserManager<ApplicationUser> userManager) =>
+        app.MapPost("/api/users/upload", (List<UserInformationDto> newUsers, MainContext dbContext, UserManager<ApplicationUser> userManager) =>
             {
                 newUsers.ForEach(u =>
                 {
