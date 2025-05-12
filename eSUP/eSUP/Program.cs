@@ -53,7 +53,7 @@ public class Program
         // Local: ./Data/eSUP.db
         // On Azure: D:/home/site/wwwroot/Data/eSUP.db
         //string connectionString = "Data Source=D:/home/site/wwwroot/Data/eSUP.db";
-        string connectionString = "Data Source=Data/eSUP.db";
+        string connectionString = "Data Source=./Data/eSUP.db";
         builder.Services.AddDbContext<MainContext>(options => options.UseSqlite(connectionString));
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
