@@ -3,7 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using eSUP.Data;
+using eSUP.Model;
 
 #nullable disable
 
@@ -175,7 +175,7 @@ namespace eSUP.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("eSUP.Data.ApplicationUser", b =>
+            modelBuilder.Entity("eSUP.Model.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -248,7 +248,7 @@ namespace eSUP.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("eSUP.Data.Exercise", b =>
+            modelBuilder.Entity("eSUP.Model.Exercise", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -279,7 +279,7 @@ namespace eSUP.Migrations
                     b.ToTable("Exercises");
                 });
 
-            modelBuilder.Entity("eSUP.Data.Part", b =>
+            modelBuilder.Entity("eSUP.Model.Part", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -322,7 +322,7 @@ namespace eSUP.Migrations
                     b.ToTable("Parts");
                 });
 
-            modelBuilder.Entity("eSUP.Data.Planner", b =>
+            modelBuilder.Entity("eSUP.Model.Planner", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -357,7 +357,7 @@ namespace eSUP.Migrations
                     b.ToTable("Planners");
                 });
 
-            modelBuilder.Entity("eSUP.Data.Question", b =>
+            modelBuilder.Entity("eSUP.Model.Question", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -390,13 +390,13 @@ namespace eSUP.Migrations
 
             modelBuilder.Entity("ApplicationUserPart", b =>
                 {
-                    b.HasOne("eSUP.Data.Part", null)
+                    b.HasOne("eSUP.Model.Part", null)
                         .WithMany()
                         .HasForeignKey("PartsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("eSUP.Data.ApplicationUser", null)
+                    b.HasOne("eSUP.Model.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UsersId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -405,13 +405,13 @@ namespace eSUP.Migrations
 
             modelBuilder.Entity("ApplicationUserPlanner", b =>
                 {
-                    b.HasOne("eSUP.Data.Planner", null)
+                    b.HasOne("eSUP.Model.Planner", null)
                         .WithMany()
                         .HasForeignKey("PlannersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("eSUP.Data.ApplicationUser", null)
+                    b.HasOne("eSUP.Model.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UsersId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -429,7 +429,7 @@ namespace eSUP.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("eSUP.Data.ApplicationUser", null)
+                    b.HasOne("eSUP.Model.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -438,7 +438,7 @@ namespace eSUP.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("eSUP.Data.ApplicationUser", null)
+                    b.HasOne("eSUP.Model.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -453,7 +453,7 @@ namespace eSUP.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("eSUP.Data.ApplicationUser", null)
+                    b.HasOne("eSUP.Model.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -462,48 +462,48 @@ namespace eSUP.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("eSUP.Data.ApplicationUser", null)
+                    b.HasOne("eSUP.Model.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("eSUP.Data.Exercise", b =>
+            modelBuilder.Entity("eSUP.Model.Exercise", b =>
                 {
-                    b.HasOne("eSUP.Data.Planner", null)
+                    b.HasOne("eSUP.Model.Planner", null)
                         .WithMany("Exercises")
                         .HasForeignKey("PlannerId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("eSUP.Data.Part", b =>
+            modelBuilder.Entity("eSUP.Model.Part", b =>
                 {
-                    b.HasOne("eSUP.Data.Question", null)
+                    b.HasOne("eSUP.Model.Question", null)
                         .WithMany("Parts")
                         .HasForeignKey("QuestionId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("eSUP.Data.Question", b =>
+            modelBuilder.Entity("eSUP.Model.Question", b =>
                 {
-                    b.HasOne("eSUP.Data.Exercise", null)
+                    b.HasOne("eSUP.Model.Exercise", null)
                         .WithMany("Questions")
                         .HasForeignKey("ExerciseId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("eSUP.Data.Exercise", b =>
+            modelBuilder.Entity("eSUP.Model.Exercise", b =>
                 {
                     b.Navigation("Questions");
                 });
 
-            modelBuilder.Entity("eSUP.Data.Planner", b =>
+            modelBuilder.Entity("eSUP.Model.Planner", b =>
                 {
                     b.Navigation("Exercises");
                 });
 
-            modelBuilder.Entity("eSUP.Data.Question", b =>
+            modelBuilder.Entity("eSUP.Model.Question", b =>
                 {
                     b.Navigation("Parts");
                 });

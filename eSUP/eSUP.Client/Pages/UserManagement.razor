@@ -6,23 +6,31 @@
 
 @attribute [Authorize(Roles = "Admin")]
 
+<MudPopoverProvider/>
 <MudText Typo="Typo.h3" Color="Color.Primary">User Management</MudText>
 <hr />
-<MudPaper Class="p-4">
-    <MudDataGrid Items="vm.Users" Bordered="true" Dense>
-        <Columns>
-            <PropertyColumn Property="x => x.UserId" Title="ID" Hidden="true" />
-            <PropertyColumn Property="x => x.FirstName" Title="First Name" />
-            <PropertyColumn Property="x => x.LastName" Title="Last Name" />
-            <PropertyColumn Property="x => x.Email" Title="eMail" />
-            <PropertyColumn Property="x => x.Role" Title="Role" />
-            <TemplateColumn>
-                <CellTemplate>
-                    <MudTooltip Text="Upgrade">
-                        <MudIconButton Icon="@Icons.Material.Filled.MoveUp" Color=Color.Primary Size=Size.Small aria-label="upgrade" OnClick="() => vm.UpgradeRoleAsync(context.Item)"/>
-                    </MudTooltip>
-                </CellTemplate>
-            </TemplateColumn>
-        </Columns>
-    </MudDataGrid>
-</MudPaper>
+<MudDataGrid Items="vm.Users" Bordered="true" Dense LoadingProgressColor="Color.Secondary">
+    <Columns>
+        <PropertyColumn Property="x => x.UserId" Title="ID" Hidden="true" />
+        <PropertyColumn Property="x => x.FirstName" Title="First Name" />
+        <PropertyColumn Property="x => x.LastName" Title="Last Name" />
+        <PropertyColumn Property="x => x.Group" Title="Group" />
+        <PropertyColumn Property="x => x.Email" Title="eMail" />
+        <PropertyColumn Property="x => x.Role" Title="Role" />
+        <TemplateColumn>
+            <CellTemplate>
+                <MudTooltip Text="Upgrade">
+                    <MudIconButton Icon="@Icons.Material.Filled.MoveUp" Color=Color.Primary Size=Size.Small aria-label="upgrade" OnClick="() => vm.UpgradeRoleAsync(context.Item)" />
+                </MudTooltip>
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+</MudDataGrid>
+<br />
+<MudFileUpload T="IBrowserFile" Accept=".csv" FilesChanged="vm.UploadUserListAsync">
+    <ActivatorContent>
+        <MudFab Color="Color.Primary"
+                StartIcon="@Icons.Material.Filled.AttachFile"
+                Label="Import Users" />
+    </ActivatorContent>
+</MudFileUpload>

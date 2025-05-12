@@ -1,10 +1,9 @@
-﻿using eSUP.Data;
-using eSUP.DTO;
+﻿using eSUP.DTO;
+using eSUP.Model;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
-using System.Numerics;
 using System.Security.Claims;
 
 namespace eSUP.API;
@@ -36,7 +35,7 @@ public static class ClientAPI
                     Id = new Guid(user.Id),
                     Name = user.Email
                 };
-                planner.Exercises.OrderBy(e =>e.Sequence).ToList().ForEach(e =>
+                planner.Exercises.OrderBy(e => e.Sequence).ToList().ForEach(e =>
                 {
                     var partCount = e.Questions.SelectMany(q => q.Parts).Where(p => p.Users.Contains(user)).Count();
                     var exercise = new ExerciseDto()
@@ -150,7 +149,7 @@ public static class ClientAPI
 
         app.MapPost("/api/planner/update", async ([FromBody] Stack<PartDto> changes, MainContext dbContext) =>
         {
-            while(changes.Count >0)
+            while (changes.Count > 0)
             {
                 var change = changes.Pop();
                 var part = dbContext.Parts.Find(change.Id);
@@ -293,6 +292,26 @@ public static class ClientAPI
             });
             return Results.Ok(userList);
         });
+
+        app.MapPost("/api/users/upload", async (List<UserInformationDto> newUsers, MainContext dbContext, UserManager<ApplicationUser> userManager) =>
+            {
+                newUsers.ForEach(u =>
+                {
+                    var user = new ApplicationUser
+                    {
+                        UserName = u.Email,
+                        Email = u.Email,
+                        FirstName = u.FirstName,
+                        LastName = u.LastName,
+                        Group = u.Group
+                    };
+                    var result = userManager.CreateAsync(user, u.Password ?? "Password1!").Result;
+                    if (result.Succeeded)
+                        userManager.AddToRoleAsync(user, "Student").Wait();
+                });
+                return Results.Ok("Users uploaded successfully.");
+            })
+            .DisableAntiforgery();
 
         app.MapGet("/api/users/upgrade/{id}", async (Guid id, MainContext dbContext, UserManager<ApplicationUser> userManager) =>
         {

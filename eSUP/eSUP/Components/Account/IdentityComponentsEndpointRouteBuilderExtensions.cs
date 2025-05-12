@@ -2,7 +2,7 @@ using System.Security.Claims;
 using System.Text.Json;
 using eSUP.Components.Account.Pages;
 using eSUP.Components.Account.Pages.Manage;
-using eSUP.Data;
+using eSUP.Model;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;

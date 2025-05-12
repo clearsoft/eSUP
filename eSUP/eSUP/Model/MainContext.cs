@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace eSUP.Data
+namespace eSUP.Model
 {
     public class MainContext : IdentityDbContext<ApplicationUser>
     {

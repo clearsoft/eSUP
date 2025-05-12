@@ -1,4 +1,4 @@
-﻿namespace eSUP.Data
+﻿namespace eSUP.Model
 {
     public enum PartCompletionState
     {

@@ -1,4 +1,4 @@
-using eSUP.Data;
+using eSUP.Model;
 using Microsoft.AspNetCore.Identity;
 
 namespace eSUP.Components.Account

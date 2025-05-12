@@ -2,7 +2,7 @@ using eSUP.API;
 using eSUP.Client.ViewModels;
 using eSUP.Components;
 using eSUP.Components.Account;
-using eSUP.Data;
+using eSUP.Model;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -53,7 +53,7 @@ public class Program
         // Local: ./Data/eSUP.db
         // On Azure: D:/home/site/wwwroot/Data/eSUP.db
         //string connectionString = "Data Source=D:/home/site/wwwroot/Data/eSUP.db";
-        string connectionString = "Data Source=eSUP.db";
+        string connectionString = "Data Source=Data/eSUP.db";
         builder.Services.AddDbContext<MainContext>(options => options.UseSqlite(connectionString));
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 

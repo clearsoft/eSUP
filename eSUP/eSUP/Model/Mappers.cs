@@ -1,4 +1,4 @@
-﻿namespace eSUP.Data;
+﻿namespace eSUP.Model;
 using eSUP.DTO;
 using Microsoft.AspNetCore.Identity;
 
@@ -13,20 +13,6 @@ public static class Mappers
             FirstName = user.FirstName ?? "-",
             LastName = user.LastName ?? "-",
             IsAssigned = false
-        };
-    }
-
-    public static UserInformationDto Map(this ApplicationUser user, Planner planner, UserManager<ApplicationUser> userManager)
-    {
-        bool isAssigned = user.Planners.SelectMany(p => p.Users).Any(u => u.Id == user.Id);
-        return new UserInformationDto
-        {
-            UserId = new Guid(user.Id),
-            Email = user.Email ?? "-",
-            FirstName = user.FirstName ?? "-",
-            LastName = user.LastName ?? "-",
-            Role = userManager.GetRolesAsync(user).Result.FirstOrDefault(),
-            IsAssigned = isAssigned
         };
     }
 

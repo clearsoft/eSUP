@@ -1,4 +1,4 @@
-﻿using eSUP.Data;
+﻿using eSUP.Model;
 using eSUP.DTO;
 using Microsoft.EntityFrameworkCore;
 using System.Data.Common;

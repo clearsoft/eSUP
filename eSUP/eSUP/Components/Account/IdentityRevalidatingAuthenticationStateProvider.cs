@@ -1,5 +1,5 @@
 using System.Security.Claims;
-using eSUP.Data;
+using eSUP.Model;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server;
 using Microsoft.AspNetCore.Identity;
