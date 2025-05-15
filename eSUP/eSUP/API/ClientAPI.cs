@@ -28,16 +28,19 @@ public static class ClientAPI
 
             // We fill this with all that is needed for the table display
             PlannerProgressDto progressPackage = new();
-            await dbContext.Users.Where(u => u.Parts.Any()).ForEachAsync(user =>
+
+            // TODO:  Reverse the logic here - Loop through exercises then users.
+            var users = dbContext.Users.Where(u => u.Planners.Any(p => p.Id == plannerId));
+            await users.ForEachAsync(u =>
             {
                 var studentExercise = new StudentProgressDto
                 {
-                    Id = new Guid(user.Id),
-                    Name = user.Email
+                    Id = new Guid(u.Id),
+                    Name = u.Email
                 };
                 planner.Exercises.OrderBy(e => e.Sequence).ToList().ForEach(e =>
                 {
-                    var partCount = e.Questions.SelectMany(q => q.Parts).Where(p => p.Users.Contains(user)).Count();
+                    var partCount = e.Questions.SelectMany(q => q.Parts).Where(p => p.Users.Contains(u)).Count();
                     var exercise = new ExerciseDto()
                     {
                         Id = e.Id,

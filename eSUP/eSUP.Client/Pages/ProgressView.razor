@@ -5,8 +5,8 @@
 @using eSUP.DTO
 
 @attribute [Authorize(Roles = "Admin,Teacher")]
-<MudPopoverProvider/>
-<MudDialogProvider/>
+<MudPopoverProvider />
+<MudDialogProvider />
 <MudText Typo="Typo.h3" Color="Color.Primary">Progress</MudText>
 <hr />
 
@@ -16,10 +16,11 @@
     <MudTable Items="@vm.ProgressData!.StudentProgresses" Dense="true" Elevation="0" Bordered="false" HorizontalScrollbar="true">
         <HeaderContent>
             <MudTh>Student Name</MudTh>
-            @foreach (var entry in vm.ProgressData!.StudentProgresses[0].Exercises)
-            {
-                <MudTh>@entry.Title</MudTh>
-            }
+            @if (vm.ProgressData!.StudentProgresses.Any())
+                foreach (var entry in vm.ProgressData!.StudentProgresses[0].Exercises)
+                {
+                    <MudTh>@entry.Title</MudTh>
+                }
         </HeaderContent>
         <RowTemplate>
             <MudTd Style="width:300px;">@context.Name</MudTd>
