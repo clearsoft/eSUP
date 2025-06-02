@@ -2,10 +2,11 @@
 @rendermode @(new InteractiveWebAssemblyRenderMode(false))
 
 @using MudBlazor
+@using eSUP.DTO
 
 <MudPopoverProvider/>
 <MudText Typo="Typo.h3" Color="Color.Primary">Assign Users</MudText>
-<MudDataGrid Items=@vm.Assignment!.Users Dense>
+<MudDataGrid @ref="userGrid" T="UserInformationDto" MultiSelection="true" @bind-SelectedItems="@vm.SelectedUsers" ServerData="vm.LoadUsersFromServerAsync" Bordered="true" Dense>
     <ToolBarContent>
         <MudGrid>
             <MudItem xs="10">
@@ -20,17 +21,13 @@
         </MudGrid>
     </ToolBarContent>
     <Columns>
-        <TemplateColumn Title="">
-            <CellTemplate>
-                <MudCheckBox @bind-Value=@context.Item!.IsAssigned Class="align-center" />
-            </CellTemplate>
-        </TemplateColumn> 
+        <SelectColumn T="UserInformationDto"/> 
         <PropertyColumn Property="x => x.UserId" Title="ID" Hidden="true" />
         <PropertyColumn Property="x => x.FirstName" Title="First Name" />
         <PropertyColumn Property="x => x.LastName" Title="Last Name" />
+        <PropertyColumn Property="x => x.Group" Title="Group" />
         <PropertyColumn Property="x => x.Role" Title="Role" />
         <PropertyColumn Property="x => x.Email" Title="Email" />
-
     </Columns>
 </MudDataGrid>
 

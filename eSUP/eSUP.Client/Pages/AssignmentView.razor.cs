@@ -1,5 +1,9 @@
 ﻿using eSUP.Client.ViewModels;
+using eSUP.DTO;
 using Microsoft.AspNetCore.Components;
+using MudBlazor;
+using System.IO.Compression;
+using System.Net.Http;
 
 namespace eSUP.Client.Pages;
 
@@ -7,23 +11,24 @@ public partial class AssignmentView(AssignmentViewModel _vm, NavigationManager _
 {
     private readonly AssignmentViewModel vm = _vm;
     private readonly NavigationManager navigationManager = _navigationManager;
-
     [Parameter]
     public string? PlannerId { get; set; }
 
-    protected override async Task OnParametersSetAsync()
+    MudDataGrid<UserInformationDto>? userGrid;
+
+    protected async override Task OnParametersSetAsync()
     {
-        await vm.LoadAssignmentAsync(PlannerId);
-        await base.OnParametersSetAsync();
-        StateHasChanged();
+        vm.PlannerId = PlannerId;
+        await userGrid!.ReloadServerData();
     }
 
     private async Task SaveAssignmentAsync()
     {
-        await vm.SaveAssignmentAsync(PlannerId);
+        await vm.SaveAssignmentAsync();
         await Task.Delay(500);
         navigationManager.NavigateTo("/planners");
     }
+
     protected void ReturnToPlannerPage()
     {
         navigationManager.NavigateTo("planners");

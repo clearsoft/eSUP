@@ -33,6 +33,7 @@ public partial class EditorView(CreatorViewModel _vm, NavigationManager _navigat
     private void RecordChange(PartDto part)
     {
         changeStack.Push(part);
+        StateHasChanged();
     }
 
     private async Task UpdatePlanner()

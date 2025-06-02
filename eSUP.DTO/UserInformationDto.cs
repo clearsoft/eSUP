@@ -13,4 +13,6 @@ public class UserInformationDto
     [Ignore] public bool Confirmed { get; set; }
     [Ignore] public string? Role { get; set; }
     [Ignore] public bool IsAssigned { get; set; }
+    [Ignore]
+    public bool IsSelected { get; set; }
 }

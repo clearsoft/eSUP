@@ -2,19 +2,26 @@
 @rendermode @(new InteractiveWebAssemblyRenderMode(false))
 
 @using Microsoft.AspNetCore.Authorization
+@using eSUP.DTO
 @using MudBlazor
 
 @attribute [Authorize(Roles = "Admin")]
 
-<MudPopoverProvider/>
+<MudPopoverProvider />
 <MudText Typo="Typo.h3" Color="Color.Primary">User Management</MudText>
 <hr />
-<MudDataGrid Items="vm.Users" Bordered="true" Dense LoadingProgressColor="Color.Secondary">
+<MudDataGrid @ref="userGrid" T="UserInformationDto" MultiSelection="true" @bind-SelectedItems="@SelectedUsers" ServerData="vm.LoadUsersFromServerAsync" Bordered="true" Dense LoadingProgressColor="Color.Secondary">
+    <Header>
+        <MudTooltip Text="Delete Selected">
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" class="ml-1 mt-n1 mb-n2" Size="Size.Medium" Color="Color.Error" OnClick="DeletedSelectedUsers">Delete Selected</MudIconButton>
+        </MudTooltip>
+    </Header>
     <Columns>
+        <SelectColumn T="UserInformationDto" />
         <PropertyColumn Property="x => x.UserId" Title="ID" Hidden="true" />
         <PropertyColumn Property="x => x.FirstName" Title="First Name" />
         <PropertyColumn Property="x => x.LastName" Title="Last Name" />
-        <PropertyColumn Property="x => x.Group" Title="Group" />
+        <PropertyColumn Property="x => x.Group" Title="Group" Filterable="true" />
         <PropertyColumn Property="x => x.Email" Title="eMail" />
         <PropertyColumn Property="x => x.Role" Title="Role" />
         <TemplateColumn>
@@ -27,7 +34,7 @@
     </Columns>
 </MudDataGrid>
 <br />
-<MudFileUpload T="IBrowserFile" Accept=".csv" FilesChanged="vm.UploadUserListAsync">
+<MudFileUpload T="IBrowserFile" Accept=".csv" FilesChanged="UploadUserListAsync">
     <ActivatorContent>
         <MudFab Color="Color.Primary"
                 StartIcon="@Icons.Material.Filled.AttachFile"

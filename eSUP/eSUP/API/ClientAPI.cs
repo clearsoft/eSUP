@@ -222,7 +222,7 @@ public static class ClientAPI
         });
 
         // This endpoint is used to assign, reassign or deassign users to a planner
-        app.MapPost("/api/planner/assign/{id}", async (ClaimsPrincipal principal, Guid id, AssignmentDto dto, MainContext dbContext) =>
+        app.MapPost("/api/planner/assign/{id}", async (Guid id, AssignmentDto dto, MainContext dbContext) =>
         {
             try
             {
@@ -230,13 +230,7 @@ public static class ClientAPI
                 if (planner is null)
                     return Results.BadRequest("Planner not found");
 
-                var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
-                var user = await dbContext.Users.FindAsync(userId);
-                if (user == null)
-                    return Results.NotFound("User not found");
-
                 planner.Users.Clear();
-                user.Planners.Clear();
 
                 var selectedUserIds = dto.Users.Where(u => u.IsAssigned).Select(u => u.UserId.ToString()).ToList();
                 // Fetch actual user entities in one query
@@ -306,7 +300,8 @@ public static class ClientAPI
                         Email = u.Email,
                         FirstName = u.FirstName,
                         LastName = u.LastName,
-                        Group = u.Group
+                        Group = u.Group,
+                        EmailConfirmed = true
                     };
                     var result = userManager.CreateAsync(user, u.Password ?? "Password1!").Result;
                     if (result.Succeeded)
@@ -346,5 +341,22 @@ public static class ClientAPI
             return Results.Ok(userInfo);
         });
 
+        app.MapPost("/api/users/delete", async ([FromBody] List<string> userIds, MainContext dbContext) =>
+        {
+            if (userIds == null || userIds.Count == 0)
+                return Results.BadRequest("No user IDs provided");
+
+            var usersToDelete = await dbContext.Users
+                .Where(u => userIds.Contains(u.Id))
+                .ToListAsync();
+
+            if (usersToDelete.Count == 0)
+                return Results.BadRequest("No users found");
+
+            dbContext.Users.RemoveRange(usersToDelete);
+            await dbContext.SaveChangesAsync();
+
+            return Results.Ok();
+        });
     }
 }
