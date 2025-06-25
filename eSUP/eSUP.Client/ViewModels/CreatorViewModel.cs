@@ -1,5 +1,7 @@
 ﻿using eSUP.DTO;
 using System.Net.Http.Json;
+using System.Text;
+using System.Text.Json;
 
 namespace eSUP.Client.ViewModels;
 
@@ -26,14 +28,28 @@ public class CreatorViewModel(HttpClient _httpClient)
         await httpClient.PostAsJsonAsync("api/planner/new", Planner);
     }
 
-    internal async Task UpdatePlannerAsync(Stack<PartDto> changes)
+    internal async Task UpdatePlannerPartsAsync(Stack<PartDto> parts)
     {
-        await httpClient.PostAsJsonAsync($"api/planner/update", changes);
+        await httpClient.PutAsJsonAsync("/api/planner/parts", parts);
+    }
+
+    internal async Task RemovePlannerPartsAsync(Stack<PartDto> parts)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Delete, "/api/planner/parts");
+        request.Content = new StringContent(JsonSerializer.Serialize(parts), Encoding.UTF8, "application/json");
+        await _httpClient.SendAsync(request);
+    }
+
+    internal async Task RemovePlannerQuestionsAsync(Stack<QuestionDto> questions)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Delete, "/api/planner/questions");
+        request.Content = new StringContent(JsonSerializer.Serialize(questions), Encoding.UTF8, "application/json");
+        await _httpClient.SendAsync(request);
+    }
+
+    internal async Task RenamePlanner()
+    {
         await httpClient.PostAsJsonAsync($"api/planner/rename/{Planner!.Id}", Planner!.Title);
-        //if (!response.IsSuccessStatusCode)
-        //{
-        //    string? error = response.ReasonPhrase;
-        //}
     }
 
     internal async Task LoadPlannerAsync(string? plannerId)

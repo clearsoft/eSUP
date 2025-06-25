@@ -52,8 +52,8 @@ public class Program
         builder.Services.AddDbContext<MainContext>(options => options.UseSqlite("Data Source = eSUP.db"));
         // Local: ./Data/eSUP.db
         // On Azure: D:/home/site/wwwroot/Data/eSUP.db
-        //string connectionString = "Data Source=./Data/eSUP.db";
-        string connectionString = "Data Source=/src/eSUP/eSUP/Data/eSUP.db";
+        string connectionString = "Data Source=./Data/eSUP.db";
+        //string connectionString = "Data Source=/src/eSUP/eSUP/Data/eSUP.db";
         builder.Services.AddDbContext<MainContext>(options => options.UseSqlite(connectionString));
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
         builder.Services.Configure<IdentityOptions>(options =>

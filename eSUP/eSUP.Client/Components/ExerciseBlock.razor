@@ -14,7 +14,7 @@
     public ExerciseDto? Exercise { get; set; }
 
     [Parameter]
-    public EventCallback<string> OnLevelChange { get; set; }
+    public EventCallback OnLevelChange { get; set; }
 
     MudRadioGroup<string>? LevelSelector { get; set; }
     private string levelSelection = "0";
@@ -32,7 +32,7 @@
     {
         Exercise!.LevelSelected = LevelSelector?.Value ?? "";
         LevelChanged();
-        OnLevelChange.InvokeAsync("Message from Child!");
+        OnLevelChange.InvokeAsync();
     }
 
     public void LevelChanged()

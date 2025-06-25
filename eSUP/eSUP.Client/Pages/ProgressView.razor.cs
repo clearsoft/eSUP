@@ -30,7 +30,7 @@ public partial class ProgressView(ProgressViewModel _vm, NavigationManager _nav,
         {
             { p => p.Title, exercise.Title},
             { p => p.Questions, questions },
-            { p => p.StudentName, student.Name}
+            { p => p.StudentName, student.FullName}
         };
 
         // Show details - this doesn't require any interaction by the operator, so no action is needed on close

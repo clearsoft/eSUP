@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Security.Claims;
+using System.Threading.Channels;
 
 namespace eSUP.API;
 
@@ -36,7 +37,9 @@ public static class ClientAPI
                 var studentExercise = new StudentProgressDto
                 {
                     Id = new Guid(u.Id),
-                    Name = u.Email
+                    EMail = u.Email,
+                    FirstName = u.FirstName,
+                    LastName = u.LastName
                 };
                 planner.Exercises.OrderBy(e => e.Sequence).ToList().ForEach(e =>
                 {
@@ -107,7 +110,8 @@ public static class ClientAPI
             {
                 StudentProgressDto output = new()
                 {
-                    Name = user is null ? "-" : user.Email
+                    FirstName = user is null ? "-" : user.FirstName,
+                    LastName = user is null ? "-" : user.LastName
                 };
                 exercises.ForEach(e =>
                 {
@@ -150,7 +154,7 @@ public static class ClientAPI
             }
         });
 
-        app.MapPost("/api/planner/update", async ([FromBody] Stack<PartDto> changes, MainContext dbContext) =>
+        app.MapPost("/api/planner/parts", async ([FromBody] Stack<PartDto> changes, MainContext dbContext) =>
         {
             while (changes.Count > 0)
             {
@@ -167,7 +171,50 @@ public static class ClientAPI
             return Results.Ok();
         });
 
-        app.MapPost("api/planner/rename/{id}", async ([FromBody] string title, Guid id, MainContext dbContext) =>
+        app.MapDelete("/api/planner/parts", async ([FromBody] Stack<PartDto> deletions, MainContext dbContext) =>
+        {
+            while(deletions.Count > 0)
+            {
+                var d = deletions.Pop();
+                var p = dbContext.Parts.Find(d.Id);
+                if (p is not null)
+                    dbContext.Parts.Remove(p);
+            }
+            await dbContext.SaveChangesAsync();
+            return Results.Ok();
+        });
+
+        app.MapPut("/api/planner/parts", async ([FromBody] Stack<PartDto> modifications, MainContext dbContext) =>
+        {
+            while (modifications.Count > 0)
+            {
+                var m = modifications.Pop();
+                var p = dbContext.Parts.Find(m.Id);
+                if (p is not null)
+                {
+                    p.IsLevelAbove = m.IsLevelAbove;
+                    p.IsLevelAt = m.IsLevelAt;
+                    p.IsLevelBelow = m.IsLevelBelow;
+                }
+            }
+            await dbContext.SaveChangesAsync();
+            return Results.Ok();
+        });
+
+        app.MapDelete("/api/planner/questions", async ([FromBody] Stack<QuestionDto> deletions, MainContext dbContext) =>
+        {
+            while (deletions.Count > 0)
+            {
+                var d = deletions.Pop();
+                var q = dbContext.Questions.Find(d.Id);
+                if (q is not null)
+                    dbContext.Questions.Remove(q);
+            }
+            await dbContext.SaveChangesAsync();
+            return Results.Ok();
+        });
+
+        app.MapPost("/api/planner/rename/{id}", async ([FromBody] string title, Guid id, MainContext dbContext) =>
         {
             var planner = await dbContext.Planners.FirstOrDefaultAsync(p => p.Id == id);
             if (planner == null)

@@ -12,6 +12,7 @@ public static class Mappers
             Email = user.Email ?? "-",
             FirstName = user.FirstName ?? "-",
             LastName = user.LastName ?? "-",
+            Group = user.Group,
             IsAssigned = false
         };
     }

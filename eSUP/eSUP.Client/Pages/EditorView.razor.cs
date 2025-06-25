@@ -8,7 +8,9 @@ public partial class EditorView(CreatorViewModel _vm, NavigationManager _navigat
 {
     private readonly CreatorViewModel vm = _vm;
     private readonly NavigationManager navigationManager = _navigationManager;
-    private readonly Stack<PartDto> changeStack = new();
+    private readonly Stack<PartDto> partsForDeletion = new();
+    private readonly Stack<PartDto> partsForModification = new();
+    private readonly Stack<QuestionDto> questionsForDeletion = new();
 
     [Parameter]
     public string? PlannerId { get; set; }
@@ -29,16 +31,28 @@ public partial class EditorView(CreatorViewModel _vm, NavigationManager _navigat
     {
         StateHasChanged();
     }
-
-    private void RecordChange(PartDto part)
+    private void QuestionTrimmed(QuestionDto q)
     {
-        changeStack.Push(part);
+        questionsForDeletion.Push(q);
+        StateHasChanged();
+    }
+
+    private void PartChanged(PartDto p)
+    {
+        if (vm.IsTrimMode)
+            partsForDeletion.Push(p);
+        else
+            partsForModification.Push(p);
         StateHasChanged();
     }
 
     private async Task UpdatePlanner()
     {
-        await vm.UpdatePlannerAsync(changeStack);
+        await vm.UpdatePlannerPartsAsync(partsForModification);
+        await vm.RemovePlannerPartsAsync(partsForDeletion);
+        await vm.RemovePlannerQuestionsAsync(questionsForDeletion);
+        await vm.RenamePlanner();
+
         await Task.Delay(200);
         navigationManager.NavigateTo("planners");
     }
@@ -48,4 +62,3 @@ public partial class EditorView(CreatorViewModel _vm, NavigationManager _navigat
         navigationManager.NavigateTo("planners");
     }
 }
-    

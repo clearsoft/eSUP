@@ -11,8 +11,8 @@
 
 <style>
     .letter-grid {
-    display: flex;
-    flex-direction: row;
+        display: flex;
+        flex-direction: row;
     }
 </style>
 
@@ -25,6 +25,8 @@
     public bool IsTrimMode { get; set; }
     [Parameter]
     public EventCallback<PartDto> OnPartChange { get; set; }
+    [Parameter]
+    public EventCallback<QuestionDto> OnQuestionTrimmed { get; set; }
 
 
     private async Task HandleClick(QuestionDto? q)
@@ -36,13 +38,12 @@
         {
             try
             {
-                int startIndex = Parent!.Questions.IndexOf(q);
-                int count = Parent.Questions.Count - startIndex;
-                if (startIndex > 0)
-                {
-                    Parent.Questions.RemoveRange(startIndex, count);
-                    await OnPartChange.InvokeAsync(q.Parts[0]); // HACK
-                }
+                //int startIndex = Parent!.Questions.IndexOf(q);
+                //int count = Parent.Questions.Count - startIndex;
+                //if (startIndex > 0)
+                //    Parent.Questions.RemoveRange(startIndex, count);
+                Parent!.Questions.Remove(q);
+                await OnQuestionTrimmed.InvokeAsync(q);
             }
             catch (Exception ex)
             {
@@ -81,10 +82,11 @@
         {
             try
             {
-                int startIndex = Item!.Parts.IndexOf(partClicked);
-                int count = Item.Parts.Count - startIndex;
-                if (startIndex > 0)
-                    Item.Parts.RemoveRange(startIndex, count);
+                // int startIndex = Item!.Parts.IndexOf(partClicked);
+                // int count = Item.Parts.Count - startIndex;
+                // if (startIndex > 0)
+                //     Item.Parts.RemoveRange(startIndex, count);
+                Item!.Parts.Remove(partClicked);
                 await OnPartChange.InvokeAsync(partClicked);
             }
             catch (Exception ex)

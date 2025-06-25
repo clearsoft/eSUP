@@ -13,8 +13,11 @@ public partial class UserManagement(UserManagementViewModel _vm) : ComponentBase
 
     public UserManagementViewModel vm { get; set; } = _vm;
 
-    protected override async Task OnInitializedAsync() => await userGrid!.ReloadServerData();
-
+    protected override void OnAfterRender(bool firstRender)
+    {
+        userGrid!.ReloadServerData();
+        base.OnAfterRender(firstRender);
+    }
     protected async Task UpgradeRole(UserInformationDto dto) => await vm!.UpgradeRoleAsync(dto);
 
     private async Task UploadUserListAsync(IBrowserFile file)

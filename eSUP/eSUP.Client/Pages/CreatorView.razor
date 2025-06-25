@@ -41,7 +41,7 @@
     <ChildRowContent>
         @foreach (var question in context.Item.Questions)
         {
-            <QuestionBlock Item=@question Parent=@context.Item IsTrimMode=vm.IsTrimMode />
+            <QuestionBlock Item=@question Parent=@context.Item IsTrimMode=vm.IsTrimMode OnQuestionTrimmed="RefreshUI"/>
         }
     </ChildRowContent>
 </MudDataGrid>

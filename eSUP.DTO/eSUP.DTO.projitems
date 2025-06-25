@@ -11,6 +11,7 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)DetailRequestDto.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HeaderDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IExerciseElement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PartChangeDto.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommonDto.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ExerciseDto.cs" />
