@@ -21,7 +21,7 @@
         <PropertyColumn Property="x => x.UserId" Title="ID" Hidden="true" />
         <PropertyColumn Property="x => x.FirstName" Title="First Name" />
         <PropertyColumn Property="x => x.LastName" Title="Last Name" />
-        <PropertyColumn Property="x => x.Group" Title="Group" Filterable="true" />
+        <PropertyColumn Property="x => x.Group" Title="Group" />
         <PropertyColumn Property="x => x.Email" Title="eMail" />
         <PropertyColumn Property="x => x.Role" Title="Role" />
         <TemplateColumn>
@@ -32,6 +32,9 @@
             </CellTemplate>
         </TemplateColumn>
     </Columns>
+    <PagerContent>
+        <MudDataGridPager T="UserInformationDto" />
+    </PagerContent>
 </MudDataGrid>
 <br />
 <MudFileUpload T="IBrowserFile" Accept=".csv" FilesChanged="UploadUserListAsync">

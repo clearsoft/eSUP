@@ -6,7 +6,7 @@
 
 <MudPopoverProvider/>
 <MudText Typo="Typo.h3" Color="Color.Primary">Assign Users</MudText>
-<MudDataGrid @ref="userGrid" T="UserInformationDto" MultiSelection="true" Filterable="true" FilterMode="DataGridFilterMode.Simple" @bind-SelectedItems="@vm.SelectedUsers" ServerData="vm.LoadUsersFromServerAsync" Bordered="true" Dense>
+<MudDataGrid @ref="userGrid" T="UserInformationDto" MultiSelection="true" @bind-SelectedItems="@vm.SelectedUsers" ServerData="vm.LoadUsersFromServerAsync" Bordered="true" Dense>
     <ToolBarContent>
         <MudGrid>
             <MudItem xs="10">
@@ -29,6 +29,9 @@
         <PropertyColumn Property="x => x.Role" Title="Role" />
         <PropertyColumn Property="x => x.Email" Title="Email" />
     </Columns>
+    <PagerContent>
+        <MudDataGridPager T="UserInformationDto" />
+    </PagerContent>
 </MudDataGrid>
 
 
