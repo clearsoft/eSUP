@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
+using Syncfusion.Blazor;
 
 namespace eSUP;
 
@@ -21,6 +22,8 @@ public class Program
             .AddInteractiveServerComponents()
             .AddInteractiveWebAssemblyComponents()
             .AddAuthenticationStateSerialization();
+
+        builder.Services.AddSyncfusionBlazor();
 
         builder.Services.AddMudServices();
 

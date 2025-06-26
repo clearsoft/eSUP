@@ -24,7 +24,11 @@ public class UserManagementViewModel(HttpClient _httpClient)
     public async Task<GridData<UserInformationDto>> LoadUsersFromServerAsync(GridState<UserInformationDto> state)
     {
         var users = await httpClient.GetFromJsonAsync<List<UserInformationDto>>("/api/users");
-        GridData<UserInformationDto> data = new() { Items = users!, TotalItems=users!.Count };
+        var sortDefinition = state.SortDefinitions.FirstOrDefault();
+        if (sortDefinition is not null && sortDefinition.SortBy == nameof(UserInformationDto.Group))
+            users = users.OrderByDirection(sortDefinition.Descending ? SortDirection.Descending : SortDirection.Ascending, o => o.Group).ToList();
+        var pagedUsers = users.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
+        GridData<UserInformationDto> data = new() { Items = pagedUsers!, TotalItems = users!.Count() };
         return data;
     }
 
@@ -49,7 +53,7 @@ public class UserManagementViewModel(HttpClient _httpClient)
 
     public async Task UploadUserListAsync(IBrowserFile file)
     {
-        if(file.ContentType != "text/csv")
+        if (file.ContentType != "text/csv")
             throw new InvalidOperationException("Invalid file type. Please upload a CSV file.");
 
         using var stream = new MemoryStream();
@@ -58,7 +62,7 @@ public class UserManagementViewModel(HttpClient _httpClient)
         using var reader = new StreamReader(stream);
         using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
         var userList = csv.GetRecords<UserInformationDto>().ToList();
-        
+
         var result = await httpClient.PostAsJsonAsync("/api/users/upload", userList);
     }
 

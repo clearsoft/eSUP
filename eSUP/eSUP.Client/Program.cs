@@ -1,6 +1,7 @@
 using eSUP.Client.ViewModels;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;
+using Syncfusion.Blazor;
 
 namespace eSUP.Client;
 
@@ -15,6 +16,7 @@ internal class Program
         builder.Services.AddAuthenticationStateDeserialization();
 
         builder.Services.AddMudServices();
+        builder.Services.AddSyncfusionBlazor();
 
         builder.Services.AddSingleton(sp =>
             new HttpClient

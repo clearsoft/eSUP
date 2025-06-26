@@ -29,7 +29,12 @@ public class AssignmentViewModel(HttpClient _httpClient)
             return new GridData<UserInformationDto>();
         var response = await httpClient.GetFromJsonAsync<AssignmentDto>($"api/planner/assign/{PlannerId}");
         Assignment = response;
-        GridData<UserInformationDto> data = new() { Items = Assignment!.Users, TotalItems = Assignment.Users.Count };
+        var users = Assignment!.Users;
+        var sortDefinition = state.SortDefinitions.FirstOrDefault();
+        if (sortDefinition is not null && sortDefinition.SortBy == nameof(UserInformationDto.Group))
+            users = users.OrderByDirection(sortDefinition.Descending ? SortDirection.Descending : SortDirection.Ascending, o => o.Group).ToList();
+        var pagedUsers = users.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
+        GridData<UserInformationDto> data = new() { Items = pagedUsers, TotalItems = users.Count };
         data.Items.Where(u => u.IsAssigned).ToList().ForEach(u => SelectedUsers!.Add(u));
         return data;
     }

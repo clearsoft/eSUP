@@ -4,6 +4,7 @@
 @using Microsoft.AspNetCore.Authorization
 @using eSUP.DTO
 @using MudBlazor
+@using Syncfusion.Blazor.Grids
 
 @attribute [Authorize(Roles = "Admin")]
 
@@ -36,7 +37,8 @@
         <MudDataGridPager T="UserInformationDto" />
     </PagerContent>
 </MudDataGrid>
-<br />
+@* <SfGrid DataSource="vm.Users"></SfGrid>
+ *@<br />
 <MudFileUpload T="IBrowserFile" Accept=".csv" FilesChanged="UploadUserListAsync">
     <ActivatorContent>
         <MudFab Color="Color.Primary"
@@ -44,3 +46,13 @@
                 Label="Import Users" />
     </ActivatorContent>
 </MudFileUpload>
+<br/>
+<p>Data must be in CSV format with the column headings:</p>
+<ul>
+    <li>FirstName</li>
+    <li>LastName</li>
+    <li>Group</li>
+    <li>Email</li>
+    <li>Password</li>
+</ul>
+<p>The column headings are case-sensitive</p>

@@ -9,11 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CsvHelper" Version="33.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.5" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="9.0.5" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.5" />
-    <PackageReference Include="MudBlazor" Version="8.6.0" />
+    <PackageReference Include="CsvHelper" Version="33.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="9.0.6" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.6" />
+    <PackageReference Include="MudBlazor" Version="8.8.0" />
+    <PackageReference Include="Syncfusion.Blazor.Grid" Version="30.1.37" />
+    <PackageReference Include="Syncfusion.Blazor.Themes" Version="30.1.37" />
   </ItemGroup>
 
   <Import Project="..\..\eSUP.DTO\eSUP.DTO.projitems" Label="Shared" />
