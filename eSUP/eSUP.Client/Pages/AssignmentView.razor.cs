@@ -21,12 +21,13 @@ public partial class AssignmentView(AssignmentViewModel _vm, NavigationManager _
     protected async override Task OnParametersSetAsync()
     {
         vm.PlannerId = PlannerId;
+        vm.SearchString = null;
         await vm.LoadAssignmentAsync(PlannerId);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await userGrid!.ReloadServerData();
+        //await userGrid!.ReloadServerData();
         await base.OnAfterRenderAsync(firstRender);
     }
 
