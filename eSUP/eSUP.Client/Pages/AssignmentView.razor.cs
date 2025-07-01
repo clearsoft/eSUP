@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using System.IO.Compression;
 using System.Net.Http;
+using static MudBlazor.CategoryTypes;
 
 namespace eSUP.Client.Pages;
 
@@ -13,13 +14,20 @@ public partial class AssignmentView(AssignmentViewModel _vm, NavigationManager _
     private readonly NavigationManager navigationManager = _navigationManager;
     [Parameter]
     public string? PlannerId { get; set; }
+    private string? searchString = null;
 
     MudDataGrid<UserInformationDto>? userGrid;
 
     protected async override Task OnParametersSetAsync()
     {
         vm.PlannerId = PlannerId;
+        await vm.LoadAssignmentAsync(PlannerId);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
         await userGrid!.ReloadServerData();
+        await base.OnAfterRenderAsync(firstRender);
     }
 
     private async Task SaveAssignmentAsync()
@@ -32,5 +40,10 @@ public partial class AssignmentView(AssignmentViewModel _vm, NavigationManager _
     protected void ReturnToPlannerPage()
     {
         navigationManager.NavigateTo("planners");
+    }
+    private Task OnSearch(string text)
+    {
+        vm.SearchString = text;
+        return userGrid!.ReloadServerData();
     }
 }
